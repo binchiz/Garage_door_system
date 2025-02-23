@@ -8,7 +8,7 @@ set(PICO_BOARD pico_w)
 include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 
 # Set name of project (as PROJECT_NAME) and C/C++ standards
-project(PillDispenser C CXX ASM)
+project(Garage_Door_System C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -28,25 +28,34 @@ add_subdirectory(test)
 
 # Create a library from your source files (excluding main.c)
 add_library(${PROJECT_NAME}_lib STATIC
-        # lib
-        src/lib/eeprom.c
-        src/lib/uart_irq/uart.c
-        src/lib/uart_irq/ring_buffer.c
-        src/lib/debug.c
+        src/commands/DoorCommands.cpp
+        src/commands/DoorCommands.h
+        src/controller/DoorController.cpp
+        src/controller/DoorController.h
+        src/controller/DoorStatus.h
+        src/controller/types.h
+        src/hardware/LimitSwitch.cpp
+        src/hardware/LimitSwitch.h
+        src/hardware/RotaryEncoder.cpp
+        src/hardware/RotaryEncoder.h
+        src/hardware/StepperMotor.cpp
+        src/hardware/StepperMotor.h
+        src/input/BottonHandler.cpp
+        src/input/BottonHandler.h
+        src/input/MQTTHandler.cpp
+        src/input/MQTTHandler.h
+        src/input/InputHandler.h
+        src/state_machine/StateMachine.cpp
+        src/state_machine/StateMachine.h
+        src/GarageDoorSytem.cpp
+        src/GarageDoorSytem.h
 
-        # main logic
-        src/led.c
-        src/lora.c
-        src/storage.c
-        src/dispenser.c
-        src/buttons.c
-        src/pill_dispenser_sm.c
 )
 
 
 # Add the main executable
 add_executable(${PROJECT_NAME}
-        src/main.c
+        src/main.cpp
 )
 
 # Link the necessary Pico SDK libraries to the static library
