@@ -2,7 +2,7 @@
  * information to be stored:
  * 1. current position
  * 2. calibrated
- * 3. status: CLOSING, OPENING, CALIBRATING, ERROR
+ * 3. status: CLOSING, OPENING, CALIBRATING, ERROR...
  */
 
 #ifndef STORAGE_H

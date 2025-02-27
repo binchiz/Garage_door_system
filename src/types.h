@@ -7,7 +7,7 @@
 #include <string>
 
 typedef enum command {OPEN, CLOSE, STOP, CALIB} command;
-typedef enum status {OPENING, OPENED, CLOSING, CLOSEED, CALIBRATING, IDLE, ERROR} status;
+typedef enum status {OPENING, OPENED, CLOSING, CLOSED, CALIBRATING, IDLE, ERROR} status;
 
 
 struct DoorStatus {
