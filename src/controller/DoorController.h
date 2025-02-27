@@ -21,13 +21,13 @@ public:
         std::unique_ptr<StepperMotor> motor
     );
 
-    DoorStatus getDoorStatus(); // returns a structure that contains the status. see types.h
-    void setDoorStatus(DoorStatus doorStatus); // could be divided into smaller methods like "updateStep(), setCalibration()"
+    Status getDoorStatus(); // returns a structure that contains the status. see types.h
+    void setDoorStatus(); // could be divided into smaller methods for doorstate, errorstate, calibstate, position
 
-    void open();
+    void open(); // check encoder when motor running, if stuck, stop(), set errorstate and calibstate
     void close();
-    void stop();
     void calibrate();
+    void stop();
     [[nodiscard]] bool checkMoving() const; // check if the door is actually moving, aka if the encoder is moving
 
 private:
@@ -36,7 +36,7 @@ private:
     std::unique_ptr<RotaryEncoder> encoder;
     std::unique_ptr<StepperMotor> motor;
     int totalStep;
-    DoorStatus doorStatus;
+    Status Status;
 
 };
 
