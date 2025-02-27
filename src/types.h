@@ -7,14 +7,16 @@
 #include <string>
 
 typedef enum command {OPEN, CLOSE, STOP, CALIB} command;
-typedef enum status {OPENING, OPENED, CLOSING, CLOSED, CALIBRATING, IDLE, ERROR} status;
 
+typedef enum doorState {OPENING, OPENED, CLOSING, CLOSED} doorState;
+typedef enum errorState {NORMAL, STUCK} errorState;
+typedef enum calibState {UNCALIBRATED, CALIBRATED} calibState;
 
-struct DoorStatus {
-    status status;
+struct Status {
+    doorState doorState;
+    errorState errorState;
+    calibState calibState;
     int32_t currentPosition;
-    bool isCalibrated;
-    std::string errorMessage;
 };
 
 
