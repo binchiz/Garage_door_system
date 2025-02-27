@@ -28,27 +28,27 @@ add_subdirectory(test)
 
 # Create a library from your source files (excluding main.c)
 add_library(${PROJECT_NAME}_lib STATIC
-        src/commands/DoorCommands.cpp
-        src/commands/DoorCommands.h
         src/controller/DoorController.cpp
         src/controller/DoorController.h
-        src/controller/DoorStatus.h
-        src/controller/types.h
+        src/types.h
         src/hardware/LimitSwitch.cpp
         src/hardware/LimitSwitch.h
         src/hardware/RotaryEncoder.cpp
         src/hardware/RotaryEncoder.h
         src/hardware/StepperMotor.cpp
         src/hardware/StepperMotor.h
-        src/input/BottonHandler.cpp
-        src/input/BottonHandler.h
-        src/input/MQTTHandler.cpp
-        src/input/MQTTHandler.h
-        src/input/InputHandler.h
-        src/state_machine/StateMachine.cpp
-        src/state_machine/StateMachine.h
+        src/handler/ButtonHandler.cpp
+        src/handler/ButtonHandler.h
+        src/handler/MQTTHandler.cpp
+        src/handler/MQTTHandler.h
         src/GarageDoorSytem.cpp
         src/GarageDoorSytem.h
+        src/controller/Storage.cpp
+        src/controller/Storage.h
+        src/hardware/Button.cpp
+        src/hardware/Button.h
+        src/hardware/EEPROM.cpp
+        src/hardware/EEPROM.h
 
 )
 
