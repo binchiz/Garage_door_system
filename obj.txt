@@ -1,0 +1,51 @@
+
+主service
+door_service(与门有关的逻辑)
+	open_door(): 启动开门操作，调用 StepperService，通知 MqttService 发布状态。
+	close_door(): 启动关门操作，调用 StepperService，通知 MqttService 发布状态。
+	stop_door(): 停止门，调用 StepperService，通知 MqttService 发布状态。
+	calibrate(): 执行校准，使用 StepperService（含编码器数据）、HardwareService（限位开关），保存到 EepromService，通知 MqttService。
+	handle_local_input(): 处理本地输入，(就是按钮啥的)调用 HardwareService，执行操作并通知 MqttService。
+	check_door_stuck(): 检查门是否卡住，调用 StepperService 和 StatusService，若卡住通知 ExceptionService 和 MqttService。
+	update_status(): 更新状态，调用 StatusService，通知 MqttService。
+	is_calibrated(): 检查校准状态，调用 EepromService 或 StatusService。
+
+
+辅助service
+mqtt_service(与MQTT有关的逻辑)
+	publish_status(): 发布门的状态到 "garage/door/status"（从 StatusService 获取状态）。
+	subscribe_commands(): 订阅 "garage/door/command"，接收并解析远程命令。
+	send_response(result): 发送命令执行结果或错误到 "garage/door/response"（结合 ExceptionService 获取错误信息）。
+	handle_remote_command(command): 解析命令，直接调用 DoorService 的方法：
+	如果命令是 "open"，调用 DoorService.open_door()。
+	如果命令是 "close"，调用 DoorService.close_door()。
+	如果命令是 "stop"，调用 DoorService.stop_door()。
+	根据执行结果调用 send_response()。
+	
+steper_service(电机相关逻辑, 这个按咱们已有的写就行.)
+
+EEPROM_service(存储相关)
+	save_calibration(steps): 保存校准步数。
+	load_calibration(): 读取校准步数。
+	save_door_state(state): 保存门状态。
+	load_door_state(): 读取门状态。
+	
+status_service(定义系统的所有状态)
+	set_door_state(state): 设置门状态。
+	get_door_state(): 获取门状态。
+	set_error_state(state): 设置错误状态。
+	get_error_state(): 获取错误状态。
+	set_calibration_state(state): 设置校准状态。
+	get_calibration_state(): 获取校准状态。
+	
+exception_service(错误, 日志, 警告)
+	log_error(error): 记录错误。
+	raise_warning(message): 发出警告。
+	handle_error(error): 处理错误，调用 StepperService 和 StatusService。
+	get_last_error(): 获取最近错误。
+	
+hardware_service(按钮,led啥的东西,如果没几个或者很少这个可以不要)
+	read_button(pin): 读取按钮状态（SW0、SW1、SW2）。
+	set_led_state(pin, state): 设置 LED 状态。
+	blink_led(pin, interval): 使 LED 闪烁。
+	read_limit_switch(pin): 读取限位开关状态。
