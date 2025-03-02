@@ -4,20 +4,18 @@
 #include <array>
 #include <cstdint>
 
-class StepperMotor {
+class StepperMotor_t {
 public:
-    StepperMotor(uint8_t in1, uint8_t in2, uint8_t in3, uint8_t in4);
+    explicit StepperMotor_t(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4);
+    void init() const;
     void moveUp();
     void moveDown();
-    void stop();
+    void stop() const;
 
 private:
-    enum class Move { UP, DOWN, STOP };
-    std::array<uint8_t, 4> pins;
-    std::array<uint8_t, 8> step_bits;
+    std::array<uint8_t, 4> pins{};
+    std::array<uint8_t, 8> step_bits{};
     uint8_t step;
-    Move currentMove;
-    void setMove(Move dir);
 };
 
 #endif //STEPPERMOTOR_H

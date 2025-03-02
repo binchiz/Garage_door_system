@@ -4,20 +4,21 @@
  */
 #ifndef MQTTHANDLER_H
 #define MQTTHANDLER_H
-#include <mosquitto.h>
+//#include <mosquitto.h>
 #include "../types.h"
 #include "../controller/DoorController.h"
 #include "../GarageDoorSytem.h"
 
-class MQTTHandler {
+class GarageDoorSystem;
+
+class MQTTHandler_t {
     public:
-        explicit MQTTHandler(
-        DoorController *doorController
+        explicit MQTTHandler_t(
         //...
         );
-        ~MQTTHandler();
+        ~MQTTHandler_t();
         void connectMQTT();
-        void handleMessage(const mosquitto_message* message);
+        //void handleMessage(const mosquitto_message* message);
         void publishStatus(const std::string& status);
         command createCommandFromInput();
         /*generating the correct command according to controller status
@@ -28,12 +29,12 @@ class MQTTHandler {
          */
         void update(); // call system.addCommand()
     private:
-        struct mosquitto* mosq;
+        struct mosquitto& mosq;
         bool connected{false};
         static constexpr char COMMAND_TOPIC[] = "garage/door/command";
         static constexpr char STATUS_TOPIC[] = "garage/door/status";
         static constexpr char ERROR_TOPIC[] = "garage/door/error";
-        DoorController& doorController;
+        DoorController_t& controller;
         GarageDoorSystem& system;
 
 };
