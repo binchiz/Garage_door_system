@@ -10,10 +10,10 @@
 #define STORAGE_H
 #include "../hardware/EEPROM.h"
 
-class Storage {
+class Storage_t {
     public:
-        explicit Storage(const EEPROM& eeprom);
-        ~Storage() = default;
+        explicit Storage_t(const EEPROM_t& eeprom);
+        ~Storage_t() = default;
         void init_storage();
         void saveCalib();
         void savePos();
@@ -24,7 +24,7 @@ class Storage {
         void loadState();
         void loadError();
     private:
-        EEPROM& eeprom;
+        EEPROM_t& eeprom;
 };
 
 #endif //STORAGE_H

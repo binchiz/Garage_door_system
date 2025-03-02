@@ -8,13 +8,15 @@
 
 #include <memory>
 
-class ButtonHandler {
+class GarageDoorSystem;
+
+class ButtonHandler_t{
     public:
-        ButtonHandler(
-            DoorController *doorController,
-            std::unique_ptr<Button>sw0,
-            std::unique_ptr<Button>sw1,
-            std::unique_ptr<Button>sw2
+        ButtonHandler_t(
+            DoorController_t& doorController,
+            std::unique_ptr<Button_t>sw0,
+            std::unique_ptr<Button_t>sw1,
+            std::unique_ptr<Button_t>sw2
             //...
             );
         command createCommandFromInput();
@@ -30,10 +32,10 @@ class ButtonHandler {
          */
         void update(); // call system.addCommand()
     private:
-        std::unique_ptr<Button> sw0;
-        std::unique_ptr<Button> sw1;
-        std::unique_ptr<Button> sw2;
-        DoorController& doorController;
+        std::unique_ptr<Button_t> sw0;
+        std::unique_ptr<Button_t> sw1;
+        std::unique_ptr<Button_t> sw2;
+        DoorController_t& doorController;
         GarageDoorSystem& system;
 };
 

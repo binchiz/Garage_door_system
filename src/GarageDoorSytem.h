@@ -16,6 +16,12 @@
 
 #include <queue>
 
+class ButtonHandler_t;
+class MQTTHandler_t;
+class DoorController_t;
+class Storage_t;
+
+
 class GarageDoorSystem {
     public:
         GarageDoorSystem();
@@ -23,10 +29,10 @@ class GarageDoorSystem {
         void addCommand(); //push command to queue. used by handlers
         void run();
     private:
-        DoorController& DoorController;
-        Storage& Storage;
-        ButtonHandler& ButtonHandler;
-        MQTTHandler& MQTTHandler;
+        DoorController_t& doorController;
+        Storage_t& Storage;
+        ButtonHandler_t& ButtonHandler;
+        MQTTHandler_t& MQTTHandler;
         std::queue<command> commandQueue;
 };
 

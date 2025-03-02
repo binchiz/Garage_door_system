@@ -3,9 +3,9 @@
 #define BUTTON_H
 #include <cstdint>
 
-class Button {
+class Button_t{
     public:
-        Button(uint8_t pin);
+        Button_t(uint8_t pin);
         bool isPressed() const;
     private:
         uint8_t pin;

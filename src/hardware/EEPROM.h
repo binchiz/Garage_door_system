@@ -3,14 +3,14 @@
 #define EEPROM_H
 #include <hardware/i2c.h>
 
-class EEPROM {
+class EEPROM_t {
     public:
-        explicit EEPROM(
+        explicit EEPROM_t(
             i2c_inst_t *i2c = i2c0, uint32_t baudrate = (400 * 1000),
             uint gpio_sda = 16, uint gpio_scl = 17,
             uint8_t device_addr = 0b1010000, uint8_t page_size = 64
             );
-        ~EEPROM() = default;
+        ~EEPROM_t() = default;
         void init();
         int write(const uint8_t *data, uint16_t mem_addr, uint8_t len);
         int read(uint8_t *buffer, uint16_t mem_addr, uint8_t len);

@@ -4,15 +4,15 @@
 
 #include <cstdint>
 
-class RotaryEncoder {
+class RotaryEncoder_t {
 public:
-    RotaryEncoder(uint8_t pinA, uint8_t pinB);
+    RotaryEncoder_t(uint8_t pinA, uint8_t pinB);
     uint32_t getPosition() const;
     bool hasMovedSinceLastCheck();
     void reset();
 
 private:
-    uint8_t pinA, pinB;
+    uint8_t pinA, pinB; //ADC1
     volatile int32_t position;
     int32_t lastCheckedPosition;
 

@@ -12,16 +12,16 @@
 #include "../types.h"
 #include <memory>
 
-class DoorController {
+class DoorController_t {
 public:
-    DoorController(
-        std::unique_ptr<LimitSwitch> upperLimit,
-        std::unique_ptr<LimitSwitch> lowerLimit,
-        std::unique_ptr<RotaryEncoder> encoder,
-        std::unique_ptr<StepperMotor> motor
+    DoorController_t(
+        std::unique_ptr<LimitSwitch_t> upperLimit,
+        std::unique_ptr<LimitSwitch_t> lowerLimit,
+        std::unique_ptr<RotaryEncoder_t> encoder,
+        std::unique_ptr<StepperMotor_t> motor
     );
 
-    Status getDoorStatus(); // returns a structure that contains the status. see types.h
+    Status_t getDoorStatus(); // returns a structure that contains the status. see types.h
     void setDoorStatus(); // could be divided into smaller methods for doorstate, errorstate, calibstate, position
 
     void open(); // check encoder when motor running, if stuck, stop(), set errorstate and calibstate
@@ -31,12 +31,12 @@ public:
     [[nodiscard]] bool checkMoving() const; // check if the door is actually moving, aka if the encoder is moving
 
 private:
-    std::unique_ptr<LimitSwitch> upperLimit;
-    std::unique_ptr<LimitSwitch> lowerLimit;
-    std::unique_ptr<RotaryEncoder> encoder;
-    std::unique_ptr<StepperMotor> motor;
+    std::unique_ptr<LimitSwitch_t> upperLimit;
+    std::unique_ptr<LimitSwitch_t> lowerLimit;
+    std::unique_ptr<RotaryEncoder_t> encoder;
+    std::unique_ptr<StepperMotor_t> motor;
     int totalStep;
-    Status Status;
+    Status_t Status;
 
 };
 
