@@ -31,8 +31,6 @@ add_library(${PROJECT_NAME}_lib STATIC
         src/controller/DoorController.cpp
         src/controller/DoorController.h
         src/types.h
-        src/hardware/LimitSwitch.cpp
-        src/hardware/LimitSwitch.h
         src/hardware/RotaryEncoder.cpp
         src/hardware/RotaryEncoder.h
         src/hardware/StepperMotor.cpp

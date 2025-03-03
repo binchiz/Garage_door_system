@@ -6,9 +6,9 @@
  */
 #ifndef DOORCONTROLLER_H
 #define DOORCONTROLLER_H
-#include "../hardware/LimitSwitch.h"
 #include "../hardware/RotaryEncoder.h"
 #include "../hardware/StepperMotor.h"
+#include "../hardware/Button.h"
 #include "../types.h"
 #include <memory>
 
