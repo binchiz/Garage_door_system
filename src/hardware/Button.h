@@ -14,5 +14,15 @@ class Button_t{
         static constexpr uint32_t DEBOUNCE_DELAY = 50;
 };
 
+class LimitSwitch_t : public Button_t {
+    public:
+        explicit LimitSwitch_t(uint8_t pin);
+        void init();
+        [[nodiscard]] bool isHit() const;
+
+    private:
+        uint8_t pos; //upper one or lower one
+};
+
 
 #endif //BUTTON_H
