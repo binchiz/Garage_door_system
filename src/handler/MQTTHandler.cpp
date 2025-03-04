@@ -5,21 +5,10 @@
 #include "MQTTHandler.h"
 #include <iostream>
 
-MQTTHandler_t* MQTTHandler_t::currentHandler = nullptr;  // 在cpp文件中定义
-
-//
-// MQTTHandler_t::MQTTHandler_t(DoorController_t &controller, GarageDoorSystem &system,
-//                              const std::string &ssid, const std::string &pw,
-//                              const string &hostname, int port, const string &clientID)
-//     : controller(controller), system(system), Mqtt_tool(ssid, pw, hostname, port, clientID) {
-//     connect_MQTT();
-//     subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
-//     subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
-//     subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
-//     currentHandler = this;
-// }
+std::unique_ptr<MQTTHandler_t> MQTTHandler_t::currentHandler;
 
 
+#ifdef no_ctrl
 MQTTHandler_t::MQTTHandler_t(
                              const std::string &ssid, const std::string &pw,
                              const string &hostname, int port, const string &clientID)
@@ -28,16 +17,31 @@ MQTTHandler_t::MQTTHandler_t(
     subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
     subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
     subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
-    currentHandler = this;
+    currentHandler.reset(this);
+}
+#endif
+
+#ifdef ctrl
+MQTTHandler_t::MQTTHandler_t(DoorController_t &controller, GarageDoorSystem &system,
+                             const std::string &ssid, const std::string &pw,
+                             const string &hostname, int port, const string &clientID)
+    : controller(controller), system(system), Mqtt_tool(ssid, pw, hostname, port, clientID) {
+    connect_MQTT();
+    subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
+    subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
+    subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
+    currentHandler.reset(this);
 }
 
-// DoorController_t& MQTTHandler_t::getController() {
-//     return controller;
-// }
-//
-// GarageDoorSystem& MQTTHandler_t::getSystem() {
-//     return system;
-// }
+DoorController_t& MQTTHandler_t::getController() {
+    return controller;
+}
+
+GarageDoorSystem& MQTTHandler_t::getSystem() {
+    return system;
+}
+#endif
+
 
 void MQTTHandler_t::messageHandler(MQTT::MessageData &md) {
     if (currentHandler) {
@@ -53,21 +57,18 @@ void MQTTHandler_t::processMessage(MQTT::MessageData &md) {
     std::cout << "Message received [length: " << message.payloadlen
             << "]: '" << temp_buffer.data() << "'" << std::endl;
 
-    // Status_t status = controller.getDoorStatus();
-    // if(status.calibState == UNCALIBRATED) {
-    //     system.addCommand(CALIB);
-    //     return;
-    // }
-    // system.addCommand(CALIB);
+#ifdef ctrl
+    Status_t status = controller.getDoorStatus();
+    if(status.calibState == UNCALIBRATED) {
+        system.addCommand(CALIB);
+        return;
+    }
+    system.addCommand(CALIB);
+#endif
+
 }
 
 
 
-// MQTTHandler_t::MQTTHandler_t(const std::string &ssid, const std::string &pw, const string &hostname, int port,
-//     const string &clientID) : Mqtt_tool(ssid, pw, hostname, port, clientID) {
-//     connect_MQTT();
-//     subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
-//     subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
-//     subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
-// }
+
 

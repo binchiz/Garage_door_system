@@ -11,30 +11,39 @@
 #include "../GarageDoorSytem.h"
 #include "lib/Mqtt_tool.h"
 
+class DoorController_t;
 class GarageDoorSystem;
+
+// #define ctrl
+#define no_ctrl
 
 class MQTTHandler_t : public Mqtt_tool {
 private:
     std::string COMMAND_TOPIC = "garage/door/command";
     std::string STATUS_TOPIC = "garage/door/status";
     std::string ERROR_TOPIC = "garage/door/error";
-    // DoorController_t &controller;
-    // GarageDoorSystem &system;
-    static MQTTHandler_t* currentHandler;
+
+#ifdef ctrl
+    DoorController_t &controller;
+    GarageDoorSystem &system;
+#endif
+    static std::unique_ptr<MQTTHandler_t> currentHandler;
 
 public:
-    // MQTTHandler_t( DoorController_t &controller, GarageDoorSystem &system,
-    //               const std::string &ssid, const std::string &pw,
-    //               const string &hostname, int port, const string &clientID);
-
-    MQTTHandler_t(const std::string &ssid, const std::string &pw,
-        const string &hostname, int port, const string &clientID);
-
-
+#ifdef ctrl
+    MQTTHandler_t( DoorController_t &controller, GarageDoorSystem &system,
+                  const std::string &ssid, const std::string &pw,
+                  const string &hostname, int port, const string &clientID);
 
     DoorController_t& getController();
 
     GarageDoorSystem& getSystem();
+#endif
+
+#ifdef no_ctrl
+    MQTTHandler_t(const std::string &ssid, const std::string &pw,
+        const string &hostname, int port, const string &clientID);
+#endif
 
     static void messageHandler(MQTT::MessageData &md);
 
