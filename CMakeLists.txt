@@ -25,6 +25,7 @@ add_compile_options(-Wall
 # Add the src and test directory
 add_subdirectory(test)
 
+file(GLOB MQTT_SOURCES "src/handler/lib/paho.mqtt.embedded-c/MQTTPacket/src/*.c")
 
 # Create a library from your source files (excluding main.c)
 add_library(${PROJECT_NAME}_lib STATIC
@@ -48,12 +49,36 @@ add_library(${PROJECT_NAME}_lib STATIC
         src/hardware/EEPROM.cpp
         src/hardware/EEPROM.h
 
+#        ${MQTT_SOURCES}
+#        src/handler/lib/mqtt/Countdown.h
+#        src/handler/lib/mqtt/Countdown.cpp
+#        src/handler/lib/mqtt/IPStack.h
+#        src/handler/lib/mqtt/IPStack.cpp
+#        src/handler/lib/mqtt/lwipopts.h
+#        src/handler/lib/mqtt_tool.h
+#        src/handler/lib/mqtt_tool.cpp
+
+)
+
+target_include_directories(${PROJECT_NAME}_lib PUBLIC
+        src/handler/lib/mqtt
+        src/handler/lib/paho.mqtt.embedded-c/MQTTPacket/src
+        src/handler/lib/paho.mqtt.embedded-c/MQTTClient/src
 )
 
 
 # Add the main executable
 add_executable(${PROJECT_NAME}
         src/main.cpp
+        ${MQTT_SOURCES}
+        src/handler/lib/mqtt/Countdown.h
+        src/handler/lib/mqtt/Countdown.cpp
+        src/handler/lib/mqtt/IPStack.h
+        src/handler/lib/mqtt/IPStack.cpp
+        src/handler/lib/mqtt/lwipopts.h
+        src/handler/lib/mqtt_tool.h
+        src/handler/lib/mqtt_tool.cpp
+
 )
 
 # Link the necessary Pico SDK libraries to the static library
@@ -63,12 +88,15 @@ target_link_libraries(${PROJECT_NAME}_lib
         hardware_gpio
         hardware_i2c
         hardware_uart
+        pico_cyw43_arch_lwip_poll
+        hardware_spi
 )
 
 # Link the static library to the main executable
 target_link_libraries(${PROJECT_NAME}
         ${PROJECT_NAME}_lib
 )
+
 
 # Create map/bin/hex/uf2 files
 pico_add_extra_outputs(${PROJECT_NAME})
