@@ -41,8 +41,10 @@ public:
 #endif
 
 #ifdef no_ctrl
+    void subscribe_all();
+
     MQTTHandler_t(const std::string &ssid, const std::string &pw,
-        const string &hostname, int port, const string &clientID);
+                  const string &hostname, int port, const string &clientID);
 #endif
 
     static void messageHandler(MQTT::MessageData &md);
