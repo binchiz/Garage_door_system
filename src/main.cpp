@@ -19,9 +19,9 @@ int main() {
 
     // 创建MQTT处理器
     MQTTHandler_t mqtt_handler{
-        "Redmi_138D",     // WiFi SSID
-        "zzyzmy20272025888", // WiFi 密码
-        "192.168.31.12",    // MQTT 服务器地址
+        "B38-2G",     // WiFi SSID
+        "****", // WiFi 密码
+        "192.168.1.107",    // MQTT 服务器地址
         2883,               // MQTT 服务器端口
         "GarageDoor-Client" // 客户端ID
     };
