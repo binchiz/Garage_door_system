@@ -9,14 +9,18 @@ std::unique_ptr<MQTTHandler_t> MQTTHandler_t::currentHandler;
 
 
 #ifdef no_ctrl
+void MQTTHandler_t::subscribe_all() {
+    subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
+    subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
+    subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
+}
+
 MQTTHandler_t::MQTTHandler_t(
                              const std::string &ssid, const std::string &pw,
                              const string &hostname, int port, const string &clientID)
     : Mqtt_tool(ssid, pw, hostname, port, clientID) {
     connect_MQTT();
-    subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
-    subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
-    subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
+    subscribe_all();
     currentHandler.reset(this);
 }
 #endif
@@ -53,7 +57,7 @@ void MQTTHandler_t::processMessage(MQTT::MessageData &md) {
     MQTT::Message &message = md.message;
     std::vector<char> temp_buffer(message.payloadlen + 1, '\0');
     memcpy(temp_buffer.data(), message.payload, message.payloadlen);
-    std::string mess = temp_buffer.data();
+    std::string m = temp_buffer.data(); // received message
     std::cout << "Message received [length: " << message.payloadlen
             << "]: '" << temp_buffer.data() << "'" << std::endl;
 

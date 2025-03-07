@@ -38,7 +38,7 @@ int main() {
             printf("rc from yield is %d\n", rc);
             printf("Reconnect to MQTT broker \n");
             mqtt_handler.connect_MQTT();
-            mqtt_handler.subscribe_MQTT("garage/door/command", MQTT::QOS1);
+            mqtt_handler.subscribe_all();
         }
         while (count > 0) {
             printf("count: %d ", count);
