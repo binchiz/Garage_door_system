@@ -11,13 +11,14 @@
 #include "IPStack.h"
 #include "handler/MQTTHandler.h"
 
+class DoorController_t;
+class GarageDoorSystem;
+
 int main() {
     stdio_init_all();
 
     // 创建MQTT处理器
     MQTTHandler_t mqtt_handler{
-        // Controller,          // 门控制器
-        // System,              // 门系统
         "Redmi_138D",     // WiFi SSID
         "zzyzmy20272025888", // WiFi 密码
         "192.168.31.12",    // MQTT 服务器地址
