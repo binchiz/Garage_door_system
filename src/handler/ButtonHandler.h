@@ -1,10 +1,10 @@
 
 #ifndef BOTTONHANDLER_H
 #define BOTTONHANDLER_H
-#include "../controller/DoorController.h"
-#include "../hardware/Button.h"
-#include "../types.h"
-#include "../GarageDoorSytem.h"
+#include "controller/DoorController.h"
+#include "hardware/Button.h"
+#include "types.h"
+#include "GarageDoorSytem.h"
 
 #include <memory>
 

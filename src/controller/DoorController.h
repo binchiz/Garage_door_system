@@ -6,10 +6,10 @@
  */
 #ifndef DOORCONTROLLER_H
 #define DOORCONTROLLER_H
-#include "../hardware/RotaryEncoder.h"
-#include "../hardware/StepperMotor.h"
-#include "../hardware/Button.h"
-#include "../types.h"
+#include "hardware/RotaryEncoder.h"
+#include "hardware/StepperMotor.h"
+#include "hardware/Button.h"
+#include "types.h"
 #include <memory>
 
 class DoorController_t {

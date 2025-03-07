@@ -8,7 +8,7 @@
 
 #ifndef STORAGE_H
 #define STORAGE_H
-#include "../hardware/EEPROM.h"
+#include "hardware/EEPROM.h"
 
 class Storage_t {
     public:

@@ -5,9 +5,9 @@
 #ifndef MQTTHANDLER_H
 #define MQTTHANDLER_H
 //#include <mosquitto.h>
-#include "../types.h"
-#include "../controller/DoorController.h"
-#include "../GarageDoorSytem.h"
+#include "types.h"
+#include "controller/DoorController.h"
+#include "GarageDoorSytem.h"
 
 class GarageDoorSystem;
 

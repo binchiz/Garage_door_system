@@ -22,8 +22,13 @@ add_compile_options(-Wall
 )
 
 
-# Add the src and test directory
-add_subdirectory(test)
+# Add the test directory to the build
+add_subdirectory(
+        test
+)
+
+# Add the src directory to the includes
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 
 # Create a library from your source files (excluding main.c)
