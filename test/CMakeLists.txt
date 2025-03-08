@@ -3,8 +3,10 @@ include_directories(
 )
 
 set(TEST_SOURCES
-        main_test.cpp
+        motor_test.cpp
+        mqtt_test.cpp
         button_test.cpp
+        controller_test.cpp
 )
 
 foreach (TEST_SOURCE ${TEST_SOURCES})
@@ -14,6 +16,7 @@ foreach (TEST_SOURCE ${TEST_SOURCES})
     # add executable
     add_executable(${TEST_NAME}
             ${TEST_SOURCE}
+            controller_test.cpp
     )
 
     # link to the library
