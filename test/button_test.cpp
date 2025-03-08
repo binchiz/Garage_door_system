@@ -9,6 +9,7 @@
 
 int main() {
     stdio_init_all();
+    GPIOInterrupt::init(); // init GPIO interrupt, must be called before using GPIOInterrupt
 
     std::cout << "Boot\n";
 
@@ -18,8 +19,6 @@ int main() {
 
     LimitSwitch_t limitSwitchLower(16);
     LimitSwitch_t limitSwitchUpper(17);
-
-    GPIOInterrupt::init();
 
     button0.enable();
     button1.enable();
