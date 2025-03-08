@@ -14,11 +14,11 @@ int main() {
 
     std::cout << "\nBoot\n";
 
-    int steps = 0;
+
 
     // Loop forever
     while (true) {
-        motor.moveDown();
+        motor.moveUp();
     }
 }
 

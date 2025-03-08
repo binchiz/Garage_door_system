@@ -27,7 +27,7 @@ public:
     void close();
     void calibrate();
     void stop();
-    [[nodiscard]] bool checkMoving() const; // check if the door is actually moving, aka if the encoder is moving
+    [[nodiscard]] bool checkIfStuck(); // check if the door is actually moving, aka if the encoder is moving
 
 private:
     LimitSwitch_t& upperLimit;

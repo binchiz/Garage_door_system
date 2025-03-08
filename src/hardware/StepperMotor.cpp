@@ -23,7 +23,7 @@ void StepperMotor_t::moveUp() {
     for (size_t i = 0; i < pins.size(); ++i) {
         gpio_put(pins[i], (next_step >> i) & 1);
     }
-    sleep_ms(2);
+    sleep_ms(1);
 }
 
 void StepperMotor_t::moveDown() {
@@ -32,7 +32,7 @@ void StepperMotor_t::moveDown() {
     for (size_t i = 0; i < pins.size(); ++i) {
         gpio_put(pins[i], (next_step >> i) & 1);
     }
-    sleep_ms(2);
+    sleep_ms(1);
 }
 
 void StepperMotor_t::stop() const {

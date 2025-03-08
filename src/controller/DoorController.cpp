@@ -5,6 +5,8 @@
 #include "DoorController.h"
 #include "types.h"
 
+#include <iostream>
+
 DoorController_t::DoorController_t(
     LimitSwitch_t &upperLimit,
     LimitSwitch_t &lowerLimit,
@@ -14,9 +16,9 @@ DoorController_t::DoorController_t(
         .doorState = GarageDoor::IDLE,
         .errorState = NORMAL,
         .calibState = UNCALIBRATED,
+        .moving =false,
         .totalSteps = 0,
         .currentPosition = 0,
-        .moving =false,
     };
 }
 
@@ -32,26 +34,60 @@ bool DoorController_t::isMoving() const {
     return status.moving;
 }
 
+bool DoorController_t::checkIfStuck() {
+
+    if (!encoder.hasMovedSinceLastCheck()) {
+        status.moving = false;
+        status.errorState = STUCK;
+        status.calibState = UNCALIBRATED;
+        motor.stop();
+        return true;
+    }
+    return false;
+}
 
 void DoorController_t::calibrate() {
-    motor.moveDown();
+
     while (!lowerLimit.isPressed()) {
-        sleep_ms(10);
+        motor.moveDown();
     }
-    motor.stop();
-    sleep_ms(200);
     int steps = 0;
-    motor.moveUp();
     while (!upperLimit.isPressed()) {
+        motor.moveUp();
         steps++;
     }
-    motor.stop();
     status.totalSteps = steps;
     status.calibState = CALIBRATED;
     status.doorState = GarageDoor::OPENED;
-    status.errorState = NORMAL;
-    status.currentPosition = 0;
+    std::cout << status.totalSteps << std::endl;
 }
+
+void DoorController_t::open() {
+    if (status.currentPosition > 0) {
+        status.moving = true;
+        motor.moveUp();
+        status.currentPosition--;
+    }
+    else {
+        status.doorState = GarageDoor::OPENED;
+        status.moving = false;
+    }
+}
+
+void DoorController_t::close() {
+    if (status.currentPosition < status.totalSteps) {
+        status.moving = true;
+        motor.moveDown();
+        status.currentPosition++;
+    }
+    else {
+        status.doorState = GarageDoor::CLOSED;
+        status.moving = false;
+    }
+}
+
+
+
 
 
 

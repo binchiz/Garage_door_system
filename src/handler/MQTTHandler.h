@@ -45,7 +45,7 @@ public:
 
     static void messageHandler(MQTT::MessageData &md);
 
-    void update(MQTT::MessageData &md);
+    void processMessage(MQTT::MessageData &md);
 
 };
 

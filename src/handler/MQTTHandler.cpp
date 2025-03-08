@@ -48,28 +48,28 @@ GarageDoorSystem& MQTTHandler_t::getSystem() {
 
 void MQTTHandler_t::messageHandler(MQTT::MessageData &md) {
     if (currentHandler) {
-        currentHandler->update(md);
+        currentHandler->processMessage(md);
     }
 }
 
-void MQTTHandler_t::update(MQTT::MessageData &md) {
+void MQTTHandler_t::processMessage(MQTT::MessageData &md) {
     MQTT::Message &message = md.message;
     std::vector<char> temp_buffer(message.payloadlen + 1, '\0');
     memcpy(temp_buffer.data(), message.payload, message.payloadlen);
     std::string m = temp_buffer.data(); // received message
     std::cout << "Message received [length: " << message.payloadlen
             << "]: '" << temp_buffer.data() << "'" << std::endl;
-    command c;
+
+    GarageDoor::doorState status = doorController.getDoorStatus();
     if (!doorController.isCalibrated()) {
-        if (caseInsensitiveCompare(m, "calib")) c = CALIB;
+        if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
     }
     else {
-        if (caseInsensitiveCompare(m, "stop")) c = STOP;
-        if (caseInsensitiveCompare(m, "open")) c = OPEN;
-        if (caseInsensitiveCompare(m, "close")) c = CLOSE;
-        if (caseInsensitiveCompare(m, "calib")) c = CALIB;
+        if (caseInsensitiveCompare(m, "open")) system.addCommand(OPEN);
+        if (caseInsensitiveCompare(m, "close")) system.addCommand(CLOSE);
+        if (caseInsensitiveCompare(m, "stop")) system.addCommand(STOP);
+        if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
     }
-    system.addCommand(c);
 }
 
 
