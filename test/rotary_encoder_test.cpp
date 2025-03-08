@@ -15,16 +15,11 @@ int main() {
 
     std::cout << "Boot\n";
 
-    Button_t button0(9);
-    Button_t button1(8);
-    Button_t button2(7);
-    RotaryEncoder_t rotaryEncoder(27, 28);
+    Button_t button0(9, true);
+    Button_t button1(8, true);
+    Button_t button2(7, true);
+    RotaryEncoder_t rotaryEncoder(27, 28, true);
     StepperMotor_t motor(2, 3, 6, 13);
-
-    button0.enable();
-    button1.enable();
-    button2.enable();
-    rotaryEncoder.enable();
 
     std::cout << "Press sw_0/sw_2 to move the motor up/down\n";
     std::cout << "Press sw_1 to check if the rotary encoder moved or not\n";

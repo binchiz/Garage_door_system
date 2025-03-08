@@ -1,13 +1,22 @@
-
 #ifndef ROTARYENCODER_H
 #define ROTARYENCODER_H
 
 #include <pico/util/queue.h>
 
+/**
+ * @brief Rotary encoder class for handling encoder rotating events.
+ * Set the enabled parameter to true to enable the encoder when creating.
+ * \n getPosition() returns the current position. It is relative from the last reset, it may have minus position.
+ * \n hasMovedSinceLastCheck() returns true if the encoder has moved since the last check.
+ * \n resetPosition() resets the position to 0.
+ * \n  enable() and disable() can be used to enable and disable the button.
+ */
 class RotaryEncoder_t {
 public:
-    RotaryEncoder_t(uint8_t pinA, uint8_t pinB);
-    [[nodiscard]] int getPosition();
+    // Set the enabled parameter to true to enable the encoder when creating.
+    RotaryEncoder_t(uint8_t pinA, uint8_t pinB, bool enabled = false);
+    ~RotaryEncoder_t();
+    [[nodiscard]] int getPosition(); // The position is relative from the last reset, it may have minus position.
     bool hasMovedSinceLastCheck();
     void resetPosition();
     void enable() const;

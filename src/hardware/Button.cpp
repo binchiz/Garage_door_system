@@ -6,13 +6,15 @@
 #include <pico/stdlib.h>
 #include "handler/GPIOInterrupt.h"
 
-Button_t::Button_t(const uint8_t pin) : pin(pin), lastDebounceTime(0), pressing(false) {
+Button_t::Button_t(const uint8_t pin, bool enabled) : pin(pin), lastDebounceTime(0), pressing(false), eventQueue{} {
     gpio_init(pin);
     gpio_set_dir(pin, GPIO_IN);
     gpio_pull_up(pin);
     queue_init(&eventQueue, sizeof(bool), EVENT_QUEUE_SIZE);
     GPIOInterrupt::registerCallback(pin, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, &Button_t::staticIrqCallback, this);
-
+    if (enabled) {
+        enable();
+    }
 }
 
 bool Button_t::isPressed() {
@@ -60,5 +62,5 @@ void Button_t::disable() {
 }
 
 
-LimitSwitch_t::LimitSwitch_t(const uint8_t pin) : Button_t(pin) {
+LimitSwitch_t::LimitSwitch_t(const uint8_t pin, bool enabled): Button_t(pin, enabled) {
 }
