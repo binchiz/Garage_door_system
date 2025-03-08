@@ -14,9 +14,9 @@ class ButtonHandler_t{
     public:
         ButtonHandler_t(
             DoorController_t& doorController,
-            std::unique_ptr<Button_t>sw0,
-            std::unique_ptr<Button_t>sw1,
-            std::unique_ptr<Button_t>sw2
+            Button_t& sw0,
+            Button_t& sw1,
+            Button_t& sw2
             //...
             );
         command createCommandFromInput();
@@ -32,9 +32,9 @@ class ButtonHandler_t{
          */
         void update(); // call system.addCommand()
     private:
-        std::unique_ptr<Button_t> sw0;
-        std::unique_ptr<Button_t> sw1;
-        std::unique_ptr<Button_t> sw2;
+        Button_t& sw0;
+        Button_t& sw1;
+        Button_t& sw2;
         DoorController_t& doorController;
         GarageDoorSystem& system;
 };

@@ -3,7 +3,8 @@ include_directories(
 )
 
 set(TEST_SOURCES
-        main_test.cpp
+        motor_test.cpp
+        mqtt_test.cpp
         button_test.cpp
 )
 

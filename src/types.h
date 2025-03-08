@@ -17,7 +17,8 @@ struct Status_t {
     GarageDoor::doorState_t doorState;
     errorState_t errorState; //卡每卡住
     calibState_t calibState;
-    int32_t currentPosition; //当前位置看步数
+    int totalSteps;
+    int currentPosition; //当前位置看步数
 };
 
 

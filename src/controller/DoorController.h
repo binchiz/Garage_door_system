@@ -10,15 +10,14 @@
 #include "hardware/StepperMotor.h"
 #include "hardware/Button.h"
 #include "types.h"
-#include <memory>
 
 class DoorController_t {
 public:
     DoorController_t(
-        std::unique_ptr<LimitSwitch_t> upperLimit,
-        std::unique_ptr<LimitSwitch_t> lowerLimit,
-        std::unique_ptr<RotaryEncoder_t> encoder,
-        std::unique_ptr<StepperMotor_t> motor
+        LimitSwitch_t& upperLimit,
+        LimitSwitch_t& lowerLimit,
+        RotaryEncoder_t& encoder,
+        StepperMotor_t& motor
     );
 
     Status_t getDoorStatus(); // returns a structure that contains the status. see types.h
@@ -31,10 +30,10 @@ public:
     [[nodiscard]] bool checkMoving() const; // check if the door is actually moving, aka if the encoder is moving
 
 private:
-    std::unique_ptr<LimitSwitch_t> upperLimit;
-    std::unique_ptr<LimitSwitch_t> lowerLimit;
-    std::unique_ptr<RotaryEncoder_t> encoder;
-    std::unique_ptr<StepperMotor_t> motor;
+    LimitSwitch_t& upperLimit;
+    LimitSwitch_t& lowerLimit;
+    RotaryEncoder_t& encoder;
+    StepperMotor_t& motor;
     int totalStep;
     Status_t Status;
 
