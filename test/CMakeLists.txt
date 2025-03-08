@@ -6,6 +6,7 @@ set(TEST_SOURCES
         motor_test.cpp
         mqtt_test.cpp
         button_test.cpp
+        rotary_encoder_test.cpp
         controller_test.cpp
 )
 
@@ -16,7 +17,6 @@ foreach (TEST_SOURCE ${TEST_SOURCES})
     # add executable
     add_executable(${TEST_NAME}
             ${TEST_SOURCE}
-            controller_test.cpp
     )
 
     # link to the library
