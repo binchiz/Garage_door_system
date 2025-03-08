@@ -33,7 +33,7 @@ Button_t::~Button_t() {
 
 
 void Button_t::staticIrqCallback(void *context, const uint32_t events) {
-    Button_t *self = static_cast<Button_t *>(context);
+    auto *self = static_cast<Button_t *>(context);
     self->irqCallback(events);
 }
 
@@ -57,8 +57,8 @@ void Button_t::enable() const {
 }
 
 void Button_t::disable() {
-    pressing = false; // make sure pressing state is reset, in case the button is disabled while pressing
     GPIOInterrupt::disableCallback(pin);
+    pressing = false; // make sure pressing state is reset, in case the button is disabled while pressing
 }
 
 

@@ -13,14 +13,14 @@
 class Button_t {
 public:
     explicit Button_t(uint8_t pin, bool enabled=false);
-    ~Button_t();
+    virtual ~Button_t();
     [[nodiscard]] bool isPressed();
     [[nodiscard]] bool isPressing() const;
     void enable() const;
     void disable();
 
 private:
-    uint8_t pin;
+    const uint8_t pin;
     volatile uint32_t lastDebounceTime;
     volatile bool pressing;
     queue_t eventQueue;

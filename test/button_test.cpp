@@ -11,7 +11,7 @@ int main() {
     stdio_init_all();
     GPIOInterrupt::init(); // init GPIO interrupt, must be called before using GPIOInterrupt
 
-    std::cout << "Boot\n";
+    std::cout << "Button Test" << std::endl;
 
     Button_t button0(9, true);
     Button_t button1(8, true);

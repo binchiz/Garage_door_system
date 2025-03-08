@@ -23,7 +23,7 @@ public:
     void disable() const;
 
 private:
-    uint8_t pinA, pinB; //ADC1
+    const uint8_t pinA, pinB; //ADC1
     volatile int position; // using int, it may have minus position (relative position from the restart)
     int lastCheckedPosition;
     queue_t eventQueue;
