@@ -21,7 +21,6 @@ int main() {
     RotaryEncoder_t rotaryEncoder(27, 28);
     StepperMotor_t motor(2, 3, 6, 13);
 
-    motor.init();
     button0.enable();
     button1.enable();
     button2.enable();
