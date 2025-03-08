@@ -6,7 +6,6 @@
 #include "types.h"
 #include "GarageDoorSytem.h"
 
-#include <memory>
 
 class GarageDoorSystem;
 
@@ -16,8 +15,8 @@ class ButtonHandler_t{
             DoorController_t& doorController,
             Button_t& sw0,
             Button_t& sw1,
-            Button_t& sw2
-            //...
+            Button_t& sw2,
+            GarageDoorSystem& system
             );
         command createCommandFromInput();
         /*generating the correct command according to controller status
