@@ -14,7 +14,7 @@ public:
 
 private:
     uint8_t pin;
-    uint32_t lastDebounceTime;
+    volatile uint32_t lastDebounceTime;
     volatile bool pressing;
     queue_t button_event_queue;
     static constexpr uint32_t DEBOUNCE_DELAY = 100; // ms

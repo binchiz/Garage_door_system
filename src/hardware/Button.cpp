@@ -40,7 +40,8 @@ void Button_t::irqCallback(const uint32_t events) {
         if (time_us_32() - lastDebounceTime > DEBOUNCE_DELAY * 1000) {
             lastDebounceTime = time_us_32();
             pressing = true;
-            queue_try_add(&button_event_queue, &pressing);
+            bool pressed = true;
+            queue_try_add(&button_event_queue, &pressed);
         }
     }
     if (events & GPIO_IRQ_EDGE_RISE) {
