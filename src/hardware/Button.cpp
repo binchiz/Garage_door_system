@@ -10,7 +10,7 @@ Button_t::Button_t(const uint8_t pin) : pin(pin), lastDebounceTime(0), pressing(
     gpio_init(pin);
     gpio_set_dir(pin, GPIO_IN);
     gpio_pull_up(pin);
-    queue_init(&eventQueue, sizeof(bool), 10);
+    queue_init(&eventQueue, sizeof(bool), EVENT_QUEUE_SIZE);
     GPIOInterrupt::registerCallback(pin, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, &Button_t::staticIrqCallback, this);
 
 }
@@ -51,11 +51,12 @@ void Button_t::irqCallback(const uint32_t events) {
 }
 
 void Button_t::enable() const {
-    GPIOInterrupt::enable(pin);
+    GPIOInterrupt::enableCallback(pin);
 }
 
-void Button_t::disable() const {
-    GPIOInterrupt::disable(pin);
+void Button_t::disable() {
+    pressing = false; // make sure pressing state is reset, in case the button is disabled while pressing
+    GPIOInterrupt::disableCallback(pin);
 }
 
 
