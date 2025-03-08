@@ -2,7 +2,6 @@
 // Created by zbinc on 27/02/2025.
 //
 
-#include <iostream>
 #include <cstring>
 #include "pico/stdlib.h"
 #include <hardware/i2c.h>
@@ -74,7 +73,6 @@ bool EEPROM_t::writeByteWithChecksum(uint16_t memAddr, uint16_t checksumAddr, ui
     auto checksum = static_cast<uint8_t>(~data);
     int retData = write(&data, memAddr, 1);
     int retChecksum = write(&checksum, checksumAddr, 1);
-    std::cout << "retData: " << retData << ", retChecksum: " << retChecksum << std::endl;
     return retData == 1 && retChecksum == 1;
 }
 
@@ -83,8 +81,5 @@ bool EEPROM_t::readByteWithChecksum(uint16_t memAddr, uint16_t checksumAddr, uin
     int retData = read(data, memAddr, 1);
     int retChecksum = read(&checksum, checksumAddr, 1);
     bool isChecksumCorrect = checksum == static_cast<uint8_t>(~(*data));
-    if (isChecksumCorrect) {
-        std::cout << "Checksum is correct" << std::endl;
-    }
     return retData == 1 && retChecksum == 1 && isChecksumCorrect;
 }
