@@ -26,7 +26,7 @@ public:
     void open(); // check encoder when motor running, if stuck, stop(), set errorstate and calibstate
     void close();
     void calibrate();
-    void stop();
+    void stop() const;
     [[nodiscard]] bool checkIfStuck(); // check if the door is actually moving, aka if the encoder is moving
 
 private:

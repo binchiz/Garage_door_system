@@ -65,6 +65,7 @@ void DoorController_t::calibrate() {
 void DoorController_t::open() {
     if (status.currentPosition > 0) {
         status.moving = true;
+        status.doorState = GarageDoor::OPENING;
         motor.moveUp();
         status.currentPosition--;
     }
@@ -77,6 +78,7 @@ void DoorController_t::open() {
 void DoorController_t::close() {
     if (status.currentPosition < status.totalSteps) {
         status.moving = true;
+        status.doorState = GarageDoor::CLOSING;
         motor.moveDown();
         status.currentPosition++;
     }
@@ -85,6 +87,11 @@ void DoorController_t::close() {
         status.moving = false;
     }
 }
+
+void DoorController_t::stop() const {
+    motor.stop();
+}
+
 
 
 

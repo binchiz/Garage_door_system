@@ -25,14 +25,20 @@ class Storage_t;
 class GarageDoorSystem {
     public:
         GarageDoorSystem(DoorController_t& doorController, ButtonHandler_t& ButtonHandler, MQTTHandler_t& MQTTHandler);
+        GarageDoorSystem() = default;
+        ~GarageDoorSystem() = default;
+        void initialize(DoorController_t& doorController,
+               ButtonHandler_t& buttonHandler,
+               MQTTHandler_t& mqttHandler);
         void update();
         void addCommand(command c); //push command to queue. used by handlers
+        void doorOpening();
+        void doorClosing();
         void run();
     private:
-        DoorController_t& doorController;
-        //Storage_t& storage;
-        ButtonHandler_t& buttonHandler;
-        MQTTHandler_t& mqttHandler;
+        DoorController_t* doorController = nullptr;
+        ButtonHandler_t* buttonHandler = nullptr;
+        MQTTHandler_t* mqttHandler = nullptr;
         std::queue<command> commandQueue;
 };
 

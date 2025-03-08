@@ -20,7 +20,7 @@ class MQTTHandler_t : public Mqtt_tool {
 private:
     std::string COMMAND_TOPIC = "garage/door/command";
     std::string STATUS_TOPIC = "garage/door/status";
-    std::string ERROR_TOPIC = "garage/door/error";
+    std::string RESPONSE_TOPIC = "garage/door/response";
 
 
     DoorController_t &doorController;

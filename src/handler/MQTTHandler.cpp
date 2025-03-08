@@ -20,20 +20,21 @@ std::unique_ptr<MQTTHandler_t> MQTTHandler_t::currentHandler;
 
 
 
-void MQTTHandler_t::subscribe_all() {
-    subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
-    subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
-    subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
-}
+// void MQTTHandler_t::subscribe_all() {
+//     subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
+//     subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
+//     subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
+//     subscribe_MQTT(RESPONSE_TOPIC, MQTT::QOS1);
+// }
 
 MQTTHandler_t::MQTTHandler_t(DoorController_t &controller, GarageDoorSystem &system,
                              const std::string &ssid, const std::string &pw,
                              const string &hostname, int port, const string &clientID)
-    : doorController(controller), system(system), Mqtt_tool(ssid, pw, hostname, port, clientID) {
+    : Mqtt_tool(ssid, pw, hostname, port, clientID), doorController(controller), system(system){
     connect_MQTT();
     subscribe_MQTT(COMMAND_TOPIC, MQTT::QOS1);
-    subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
-    subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
+    // subscribe_MQTT(STATUS_TOPIC, MQTT::QOS1);
+    // subscribe_MQTT(ERROR_TOPIC, MQTT::QOS1);
     currentHandler.reset(this);
 }
 
@@ -60,16 +61,21 @@ void MQTTHandler_t::processMessage(MQTT::MessageData &md) {
     std::cout << "Message received [length: " << message.payloadlen
             << "]: '" << temp_buffer.data() << "'" << std::endl;
 
-    GarageDoor::doorState status = doorController.getDoorStatus();
     if (!doorController.isCalibrated()) {
         if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
+        else {
+            string msg = "ERROR: NOT CALIBRATED";
+            publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, msg.data(), msg.size());
+        }
     }
     else {
         if (caseInsensitiveCompare(m, "open")) system.addCommand(OPEN);
         if (caseInsensitiveCompare(m, "close")) system.addCommand(CLOSE);
-        if (caseInsensitiveCompare(m, "stop")) system.addCommand(STOP);
+        //if (caseInsensitiveCompare(m, "stop")) system.addCommand(STOP);
         if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
     }
+
+
 }
 
 

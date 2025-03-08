@@ -2,6 +2,8 @@
 #include "ButtonHandler.h"
 #include "types.h"
 
+#include <iostream>
+
 ButtonHandler_t::ButtonHandler_t(
     DoorController_t &doorController,
     Button_t &sw0,
@@ -12,17 +14,17 @@ ButtonHandler_t::ButtonHandler_t(
 }
 
 command ButtonHandler_t::createCommandFromInput() const {
-    if (!doorController.isCalibrated()) {
-        if ((sw0.isPressed() && sw2.isPressing()) || (sw2.isPressed() && sw0.isPressing())) {
-            return CALIB;
-        }
-    }
     if ((sw0.isPressed() && sw2.isPressing()) || (sw2.isPressed() && sw0.isPressing())) {
+        std::cout<< "getting calib command" << std::endl;
         return CALIB;
     }
     if (sw1.isPressed()) {
+        std::cout << "local button pressed" << std::endl;
         const GarageDoor::doorState ds = doorController.getDoorStatus();
-        if (doorController.isMoving()) return STOP;
+        if (doorController.isMoving()) {
+            std::cout << "stop command" << std::endl;
+            return STOP;
+        }
         switch (ds) {
             case GarageDoor::CLOSED:
                 return OPEN;
