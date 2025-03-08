@@ -24,15 +24,17 @@ class Storage_t;
 
 class GarageDoorSystem {
     public:
-        GarageDoorSystem();
+        GarageDoorSystem(DoorController_t& doorController, Storage_t& Storage, ButtonHandler_t& ButtonHandler, MQTTHandler_t& MQTTHandler);
         void initSystem(); //call component's init methods
-        void addCommand(); //push command to queue. used by handlers
+        void update();
+        void addCommand(command c); //push command to queue. used by handlers
+        void calib();
         void run();
     private:
         DoorController_t& doorController;
-        Storage_t& Storage;
-        ButtonHandler_t& ButtonHandler;
-        MQTTHandler_t& MQTTHandler;
+        Storage_t& storage;
+        ButtonHandler_t& buttonHandler;
+        MQTTHandler_t& mqttHandler;
         std::queue<command> commandQueue;
 };
 
