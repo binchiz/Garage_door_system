@@ -1,19 +1,18 @@
 #ifndef BUTTON_H
 #define BUTTON_H
-#include <cstdint>
-#include <pico/util/queue.h>
 
+#include <pico/util/queue.h>
 
 /**
  * @brief Button class for handling button press events.
- * The button is not enabled by default. After creating the button instance, call enable() to enable the button.
- * isPressed() returns true if the button is just pressed.
- * isPressing() returns true if the button is being pressed now.
+ * Set the enabled parameter to true to enable the button when creating.
+ * \n isPressed() returns true if the button is just pressed.
+ * \n isPressing() returns true if the button is being pressed now.
+ * \n  enable() and disable() can be used to enable and disable the button.
  */
-
 class Button_t {
 public:
-    explicit Button_t(uint8_t pin);
+    explicit Button_t(uint8_t pin, bool enabled=false);
     ~Button_t();
     [[nodiscard]] bool isPressed();
     [[nodiscard]] bool isPressing() const;
@@ -34,7 +33,7 @@ private:
 
 class LimitSwitch_t : public Button_t {
 public:
-    explicit LimitSwitch_t(uint8_t pin);
+    explicit LimitSwitch_t(uint8_t pin, bool enabled=false);
 };
 
 #endif // BUTTON_H

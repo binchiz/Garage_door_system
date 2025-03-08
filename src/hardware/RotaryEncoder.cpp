@@ -4,11 +4,10 @@
 
 #include "RotaryEncoder.h"
 #include <pico/stdlib.h>
-#include <iostream>
 #include "handler/GPIOInterrupt.h"
 
-RotaryEncoder_t::RotaryEncoder_t(uint8_t pinA, uint8_t pinB)
-        : pinA(pinA), pinB(pinB), position(0), lastCheckedPosition(0) {
+RotaryEncoder_t::RotaryEncoder_t(uint8_t pinA, uint8_t pinB, bool enabled)
+        : pinA(pinA), pinB(pinB), position(0), lastCheckedPosition(0), eventQueue{} {
     gpio_init(pinA);
     gpio_set_dir(pinA, GPIO_IN);
 
@@ -17,6 +16,13 @@ RotaryEncoder_t::RotaryEncoder_t(uint8_t pinA, uint8_t pinB)
 
     queue_init(&eventQueue, sizeof(int), EVENT_QUEUE_SIZE);
     GPIOInterrupt::registerCallback(pinA, GPIO_IRQ_EDGE_RISE, &RotaryEncoder_t::staticIrqCallback, this);
+    if (enabled) {
+        enable();
+    }
+}
+
+RotaryEncoder_t::~RotaryEncoder_t() {
+    GPIOInterrupt::unregisterCallback(pinA);
 }
 
 int RotaryEncoder_t::getPosition() {

@@ -13,18 +13,12 @@ int main() {
 
     std::cout << "Boot\n";
 
-    Button_t button0(9);
-    Button_t button1(8);
-    Button_t button2(7);
+    Button_t button0(9, true);
+    Button_t button1(8, true);
+    Button_t button2(7, true);
 
-    LimitSwitch_t limitSwitchLower(16);
-    LimitSwitch_t limitSwitchUpper(17);
-
-    button0.enable();
-    button1.enable();
-    button2.enable();
-    limitSwitchLower.enable();
-    limitSwitchUpper.enable();
+    LimitSwitch_t limitSwitchLower(16, true);
+    LimitSwitch_t limitSwitchUpper(17, true);
 
     std::cout << "Press sw_1 to test button interrupt\n";
     std::cout << "Press sw_0 and sw_2 together to calib (wait 2s)\n";
@@ -51,6 +45,7 @@ int main() {
             // calib
             std::cout << "Calib\n";
             button0.disable();
+            button1.disable();
             button2.disable();
             calibStartTime = currentTime;
             calibrating = true;
@@ -59,6 +54,7 @@ int main() {
         if (calibrating) {
             if (currentTime - calibStartTime > 2000000) {
                 button0.enable();
+                button1.enable();
                 button2.enable();
                 calibrating = false;
                 std::cout << "Calib finished\n";
