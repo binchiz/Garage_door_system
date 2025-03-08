@@ -8,6 +8,8 @@ set(TEST_SOURCES
         button_test.cpp
         rotary_encoder_test.cpp
         controller_test.cpp
+        eeprom_test.cpp
+        storage_test.cpp
 )
 
 foreach (TEST_SOURCE ${TEST_SOURCES})

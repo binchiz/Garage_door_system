@@ -13,7 +13,7 @@ int main() {
     stdio_init_all();
     GPIOInterrupt::init();
 
-    std::cout << "Boot\n";
+    std::cout << "Rotary Encoder Test" << std::endl;
 
     Button_t button0(9, true);
     Button_t button1(8, true);
@@ -40,7 +40,7 @@ int main() {
         }
 
         if (button1.isPressed()) {
-            std::cout << "Rotary encoder position: " << rotaryEncoder.getPosition() << std::endl;
+            std::cout << "Rotary encoder position: " << static_cast<int>(rotaryEncoder.getPosition()) << std::endl;
             std::cout << "Rotary encoder has moved: " << rotaryEncoder.hasMovedSinceLastCheck() << std::endl;
         }
     }

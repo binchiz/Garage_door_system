@@ -30,7 +30,7 @@ int RotaryEncoder_t::getPosition() {
     while (queue_try_remove(&eventQueue, &posChange)) {
         position += posChange;
     }
-    return position;
+    return static_cast<int>(position);
 }
 
 bool RotaryEncoder_t::hasMovedSinceLastCheck() {
@@ -56,7 +56,7 @@ void RotaryEncoder_t::disable() const {
 }
 
 void RotaryEncoder_t::staticIrqCallback(void *context, uint32_t events) {
-    RotaryEncoder_t *self = static_cast<RotaryEncoder_t *>(context);
+    auto *self = static_cast<RotaryEncoder_t *>(context);
     self->irqCallback(events);
 }
 
