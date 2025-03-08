@@ -35,6 +35,7 @@ private:
     RotaryEncoder_t& encoder;
     StepperMotor_t& motor;
     Status_t status;
+    int calibMargin;
 
 };
 

@@ -20,6 +20,7 @@ DoorController_t::DoorController_t(
         .totalSteps = 0,
         .currentPosition = 0,
     };
+    calibMargin = 300;
 }
 
 GarageDoor::doorState DoorController_t::getDoorStatus() const {
@@ -47,7 +48,9 @@ bool DoorController_t::checkIfStuck() {
 }
 
 void DoorController_t::calibrate() {
-
+    for (int i = 0; i < calibMargin/2; i++) {
+        motor.moveUp();
+    }
     while (!lowerLimit.isPressed()) {
         motor.moveDown();
     }
@@ -56,36 +59,56 @@ void DoorController_t::calibrate() {
         motor.moveUp();
         steps++;
     }
-    status.totalSteps = steps;
+    for (int i = 0; i < calibMargin/2; i++) {
+        motor.moveDown();
+    }
+    status.totalSteps = steps-calibMargin;
     status.calibState = CALIBRATED;
     status.doorState = GarageDoor::OPENED;
     std::cout << status.totalSteps << std::endl;
 }
 
 void DoorController_t::open() {
-    if (status.currentPosition > 0) {
-        status.moving = true;
-        status.doorState = GarageDoor::OPENING;
+    status.moving = true;
+    status.doorState = GarageDoor::OPENING;
+    while (status.currentPosition > 0) {
         motor.moveUp();
         status.currentPosition--;
     }
-    else {
-        status.doorState = GarageDoor::OPENED;
-        status.moving = false;
-    }
+    status.doorState = GarageDoor::OPENED;
+    status.moving = false;
+
+    // if (status.currentPosition > 0) {
+    //     status.moving = true;
+    //     status.doorState = GarageDoor::OPENING;
+    //     motor.moveUp();
+    //     status.currentPosition--;
+    // }
+    // else {
+    //     status.doorState = GarageDoor::OPENED;
+    //     status.moving = false;
+    // }
 }
 
 void DoorController_t::close() {
-    if (status.currentPosition < status.totalSteps) {
-        status.moving = true;
-        status.doorState = GarageDoor::CLOSING;
+    status.moving = true;
+    status.doorState = GarageDoor::CLOSING;
+    while (status.currentPosition < status.totalSteps) {
         motor.moveDown();
         status.currentPosition++;
     }
-    else {
-        status.doorState = GarageDoor::CLOSED;
-        status.moving = false;
-    }
+    status.doorState = GarageDoor::CLOSED;
+    status.moving = false;
+    // if (status.currentPosition < status.totalSteps) {
+    //     status.moving = true;
+    //     status.doorState = GarageDoor::CLOSING;
+    //     motor.moveDown();
+    //     status.currentPosition++;
+    // }
+    // else {
+    //     status.doorState = GarageDoor::CLOSED;
+    //     status.moving = false;
+    // }
 }
 
 void DoorController_t::stop() const {

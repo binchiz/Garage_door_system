@@ -4,6 +4,9 @@
 #include <iostream>
 #include <ostream>
 
+static string sucessMSG = "SUCESS";
+static std::string RESPONSE_TOPIC = "garage/door/response";
+
 GarageDoorSystem::GarageDoorSystem(
     DoorController_t& doorController,
     ButtonHandler_t& buttonHandler,
@@ -66,12 +69,14 @@ void GarageDoorSystem::run() {
             switch (command) {
                 case OPEN:
                     if (doorController->isCalibrated()) {
-                        doorOpening();
+                        doorController->open();
+                        mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
                     }
                     break;
                 case CLOSE:
                     if (doorController->isCalibrated()) {
-                        doorClosing();
+                        doorController->close();
+                        mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
                     }
                     break;
                 case STOP:
@@ -79,6 +84,7 @@ void GarageDoorSystem::run() {
                     break;
                 case CALIB:
                     doorController->calibrate();
+                    mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
                     break;
             }
 

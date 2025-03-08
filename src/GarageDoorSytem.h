@@ -23,6 +23,7 @@ class Storage_t;
 
 
 class GarageDoorSystem {
+
     public:
         GarageDoorSystem(DoorController_t& doorController, ButtonHandler_t& ButtonHandler, MQTTHandler_t& MQTTHandler);
         GarageDoorSystem() = default;
@@ -40,6 +41,7 @@ class GarageDoorSystem {
         ButtonHandler_t* buttonHandler = nullptr;
         MQTTHandler_t* mqttHandler = nullptr;
         std::queue<command> commandQueue;
+
 };
 
 #endif //GARAGEDOORSYTEM_H
