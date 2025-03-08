@@ -30,6 +30,10 @@ add_subdirectory(
 # Add the src directory to the includes
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+add_compile_definitions(
+        DEBUG_ENABLE
+)
+
 file(GLOB MQTT_SOURCES "src/handler/lib/paho.mqtt.embedded-c/MQTTPacket/src/*.c")
 
 # Create a library from your source files (excluding main.c)
@@ -55,6 +59,7 @@ add_library(${PROJECT_NAME}_lib STATIC
         src/hardware/EEPROM.h
         src/handler/GPIOInterrupt.cpp
         src/handler/GPIOInterrupt.h
+        src/debug.h
 
 #        ${MQTT_SOURCES}
 #        src/handler/lib/mqtt/Countdown.h
