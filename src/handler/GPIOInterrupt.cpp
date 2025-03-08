@@ -32,13 +32,13 @@ void GPIOInterrupt::unregisterCallback(const uint pin) {
     callbacksEvents[pin] = 0;
 }
 
-void GPIOInterrupt::enable(const uint pin) {
+void GPIOInterrupt::enableCallback(uint pin) {
     assert(pin < MAX_GPIO_PINS); // GPIO number error
     assert(callbacks[pin] != nullptr); // callback not registered
     gpio_set_irq_enabled(pin, callbacksEvents[pin], true);
 }
 
-void GPIOInterrupt::disable(const uint pin) {
+void GPIOInterrupt::disableCallback(uint pin) {
     assert(pin < MAX_GPIO_PINS); // GPIO number error
     assert(callbacks[pin] != nullptr); // callback not registered
     gpio_set_irq_enabled(pin, callbacksEvents[pin], false);
