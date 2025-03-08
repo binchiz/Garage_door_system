@@ -10,14 +10,12 @@ StepperMotor_t::StepperMotor_t(const uint8_t pin1, const uint8_t pin2, const uin
     pins[3] = pin4;
     step_bits = {0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001};
     step = 0;
-}
-
-void StepperMotor_t::init() const {
     for (const uint8_t pin : pins) {
         gpio_init(pin);
         gpio_set_dir(pin, GPIO_OUT);
     }
 }
+
 
 void StepperMotor_t::moveUp() {
     step = (step + 1 ) % 8;

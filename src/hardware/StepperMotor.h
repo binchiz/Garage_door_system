@@ -7,7 +7,6 @@
 class StepperMotor_t {
 public:
     explicit StepperMotor_t(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4);
-    void init() const;
     void moveUp();
     void moveDown();
     void stop() const;
