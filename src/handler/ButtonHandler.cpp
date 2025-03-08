@@ -16,7 +16,9 @@ command ButtonHandler_t::createCommandFromInput() const {
         if ((sw0.isPressed() && sw2.isPressing()) || (sw2.isPressed() && sw0.isPressing())) {
             return CALIB;
         }
-        return STOP;
+    }
+    if ((sw0.isPressed() && sw2.isPressing()) || (sw2.isPressed() && sw0.isPressing())) {
+        return CALIB;
     }
     if (sw1.isPressed()) {
         const GarageDoor::doorState ds = doorController.getDoorStatus();
