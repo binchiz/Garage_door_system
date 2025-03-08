@@ -30,7 +30,7 @@ int RotaryEncoder_t::getPosition() {
     while (queue_try_remove(&eventQueue, &posChange)) {
         position += posChange;
     }
-    return position;
+    return static_cast<int>(position);
 }
 
 bool RotaryEncoder_t::hasMovedSinceLastCheck() {

@@ -40,7 +40,7 @@ int main() {
         }
 
         if (button1.isPressed()) {
-            std::cout << "Rotary encoder position: " << rotaryEncoder.getPosition() << std::endl;
+            std::cout << "Rotary encoder position: " << static_cast<int>(rotaryEncoder.getPosition()) << std::endl;
             std::cout << "Rotary encoder has moved: " << rotaryEncoder.hasMovedSinceLastCheck() << std::endl;
         }
     }
