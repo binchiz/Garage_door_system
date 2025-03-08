@@ -12,19 +12,30 @@
 
 class Storage_t {
     public:
-        explicit Storage_t(const EEPROM_t& eeprom);
+        explicit Storage_t(const EEPROM_t &eeprom);
         ~Storage_t() = default;
-        void init_storage();
-        void saveCalib();
+        void saveCalib() const;
         void savePos();
         void saveState();
         void saveError();
+        void saveTotalSteps();
+
         void loadCalib();
         void loadPos();
         void loadState();
         void loadError();
+        void loadTotalSteps();
+
     private:
-        EEPROM_t& eeprom;
+        const EEPROM_t& eeprom;
+        const uint16_t calibAddr = 0x00;
+        const uint16_t calibChecksumAddr = calibAddr + 1;
+        const uint16_t posAddr = 0x02;
+        const uint16_t posChecksumAddr = posAddr + 1;
+        const uint16_t stateAddr = 0x04;
+        const uint16_t stateChecksumAddr = stateAddr + 1;
+        const uint16_t errorAddr = 0x06;
+        const uint16_t errorChecksumAddr = errorAddr + 1;
 };
 
 #endif //STORAGE_H
