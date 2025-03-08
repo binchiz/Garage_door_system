@@ -21,7 +21,7 @@ private:
     static IrqCallback callbacks[MAX_GPIO_PINS];
     static uint32_t callbacksEvents[MAX_GPIO_PINS];
     static void *contexts[MAX_GPIO_PINS];
-    static void globalGPIOCallback(uint gpio, uint32_t events);
+    static void globalGPIOCallback(uint pin, uint32_t events);
 
 };
 

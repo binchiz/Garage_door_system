@@ -16,7 +16,7 @@ private:
     uint8_t pin;
     volatile uint32_t lastDebounceTime;
     volatile bool pressing;
-    queue_t button_event_queue;
+    queue_t eventQueue;
     static constexpr uint32_t DEBOUNCE_DELAY = 100; // ms
     static void staticIrqCallback(void *context, uint32_t events);
     void irqCallback(uint32_t events);
