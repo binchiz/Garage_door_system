@@ -52,6 +52,8 @@ add_library(${PROJECT_NAME}_lib STATIC
         src/hardware/Button.h
         src/hardware/EEPROM.cpp
         src/hardware/EEPROM.h
+        src/handler/GPIOInterrupt.cpp
+        src/handler/GPIOInterrupt.h
 
 )
 

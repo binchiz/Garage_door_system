@@ -2,7 +2,10 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src
 )
 
-file(GLOB TEST_SOURCES "*.cpp")
+set(TEST_SOURCES
+        main_test.cpp
+        button_test.cpp
+)
 
 foreach (TEST_SOURCE ${TEST_SOURCES})
     # get filename without extension
@@ -11,7 +14,6 @@ foreach (TEST_SOURCE ${TEST_SOURCES})
     # add executable
     add_executable(${TEST_NAME}
             ${TEST_SOURCE}
-            main_test.cpp
     )
 
     # link to the library
