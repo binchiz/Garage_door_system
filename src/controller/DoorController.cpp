@@ -16,7 +16,20 @@ DoorController_t::DoorController_t(
         .calibState = UNCALIBRATED,
         .totalSteps = 0,
         .currentPosition = 0,
+        .moving =false,
     };
+}
+
+GarageDoor::doorState DoorController_t::getDoorStatus() const {
+    return status.doorState;
+}
+
+bool DoorController_t::isCalibrated() const {
+    return status.calibState;
+}
+
+bool DoorController_t::isMoving() const {
+    return status.moving;
 }
 
 

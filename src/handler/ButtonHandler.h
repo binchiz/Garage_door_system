@@ -18,7 +18,7 @@ class ButtonHandler_t{
             Button_t& sw2,
             GarageDoorSystem& system
             );
-        command createCommandFromInput();
+        command createCommandFromInput() const;
         /*generating the correct command according to controller status
          * if sw0 and sw2 pressed at same time for 2 second -> calib
          * if sw1 pressed:
@@ -29,7 +29,7 @@ class ButtonHandler_t{
          *  stuck -> stop
          * ...
          */
-        void update(); // call system.addCommand()
+        void update() const; // call system.addCommand()
     private:
         Button_t& sw0;
         Button_t& sw1;

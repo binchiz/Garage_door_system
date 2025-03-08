@@ -20,13 +20,9 @@ public:
         StepperMotor_t& motor
     );
 
-    Status_t getDoorStatus(); // returns a structure that contains the status. see types.h
-    // void setDoorState(GarageDoor::doorState_t state);
-    // void setCalibState(calibState_t state);
-    // void setErrorState(errorState_t state);
-    // void setTotalSteps(int steps);
-    // void setPosition(int position);// could be divided into smaller methods for doorstate, errorstate, calibstate, position
-
+    [[nodiscard]] GarageDoor::doorState getDoorStatus() const; // returns a structure that contains the status. see types.h
+    [[nodiscard]] bool isCalibrated() const;
+    bool isMoving() const;
     void open(); // check encoder when motor running, if stuck, stop(), set errorstate and calibstate
     void close();
     void calibrate();
