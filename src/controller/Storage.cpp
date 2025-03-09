@@ -1,23 +1,24 @@
 #include "Storage.h"
 
 
-Storage_t::Storage_t(const EEPROM_t &eeprom, Status_t &status)
-        : eeprom(eeprom), status(status) {
+Storage_t::Storage_t(const EEPROM_t &eeprom, DoorController_t& controller)
+        : eeprom(eeprom), controller(controller) {
 
 }
 
 
 // saves
 void Storage_t::saveCalib() const {
-    auto data = static_cast<uint8_t>(status.calibState);
+    auto data = static_cast<uint8_t>(controller.isCalibrated());
     if (!eeprom.writeByteWithChecksum(ADDR_CALIB, ADDR_CALIB_CSUM, data)) {
         // failed save data, set error and blink led as well?
     }
 }
 
 void Storage_t::savePos() const {
-    auto dataL = static_cast<uint8_t>(status.currentPosition & 0xFF);
-    auto dataH = static_cast<uint8_t>(status.currentPosition >> 8);
+    auto data = static_cast<uint8_t>(controller.getPosition());
+    auto dataL = static_cast<uint8_t>(data & 0xFF);
+    auto dataH = static_cast<uint8_t>(data >> 8);
     if (!eeprom.writeByteWithChecksum(ADDR_POS_L, ADDR_POS_L_CSUM, dataL)) {
         // failed save data, set error and blink led as well?
     }
@@ -27,8 +28,9 @@ void Storage_t::savePos() const {
 }
 
 void Storage_t::saveTotalSteps() const {
-    auto dataL = static_cast<uint8_t>(status.totalSteps & 0xFF);
-    auto dataH = static_cast<uint8_t>(status.totalSteps >> 8);
+    auto data = static_cast<uint8_t>(controller.getTotalSteps());
+    auto dataL = static_cast<uint8_t>(data & 0xFF);
+    auto dataH = static_cast<uint8_t>(data >> 8);
     if (!eeprom.writeByteWithChecksum(ADDR_TOTAL_STEPS_L, ADDR_TOTAL_STEPS_L_CSUM, dataL)) {
         // failed save data, set error and blink led as well?
     }
@@ -38,14 +40,14 @@ void Storage_t::saveTotalSteps() const {
 }
 
 void Storage_t::saveState() const {
-    auto data = static_cast<uint8_t>(status.doorState);
+    auto data = static_cast<uint8_t>(controller.getDoorStatus());
     if (!eeprom.writeByteWithChecksum(ADDR_STATE, ADDR_STATE_CSUM, data)) {
         // failed save data, set error and blink led as well?
     }
 }
 
 void Storage_t::saveError() const {
-    auto data = static_cast<uint8_t>(status.errorState);
+    auto data = static_cast<uint8_t>(controller.isStuck());
     if (!eeprom.writeByteWithChecksum(ADDR_ERROR, ADDR_ERROR_CSUM, data)) {
         // failed save data, set error and blink led as well?
     }
@@ -58,7 +60,7 @@ void Storage_t::loadCalib() {
     if (!eeprom.readByteWithChecksum(ADDR_CALIB, ADDR_CALIB_CSUM, &data)) {
         // failed to read data, set error and blink led as well?
     }
-    status.calibState = static_cast<calibState_t>(data);
+    controller.setCalib(static_cast<calibState_t>(data));
 }
 
 void Storage_t::loadPos() {
@@ -69,7 +71,7 @@ void Storage_t::loadPos() {
     if (!eeprom.readByteWithChecksum(ADDR_POS_H, ADDR_POS_H_CSUM, &dataH)) {
         // failed to read data, set error and blink led as well?
     }
-    status.currentPosition = static_cast<int>(dataL) | (static_cast<int>(dataH) << 8);
+    controller.setPosition(static_cast<int>(dataL) | (static_cast<int>(dataH) << 8));
 }
 
 void Storage_t::loadTotalSteps() {
@@ -80,7 +82,7 @@ void Storage_t::loadTotalSteps() {
     if (!eeprom.readByteWithChecksum(ADDR_TOTAL_STEPS_H, ADDR_TOTAL_STEPS_H_CSUM, &dataH)) {
         // failed to read data, set error and blink led as well?
     }
-    status.totalSteps = static_cast<int>(dataL) | (static_cast<int>(dataH) << 8);
+    controller.setTotalSteps(static_cast<int>(dataL) | (static_cast<int>(dataH) << 8));
 }
 
 void Storage_t::loadState() {
@@ -88,7 +90,7 @@ void Storage_t::loadState() {
     if (!eeprom.readByteWithChecksum(ADDR_STATE, ADDR_STATE_CSUM, &data)) {
         // failed to read data, set error and blink led as well?
     }
-    status.doorState = static_cast<GarageDoor::doorState_t>(data);
+    controller.setDoorStatus(static_cast<GarageDoor::doorState_t>(data));
 }
 
 void Storage_t::loadError() {
@@ -96,5 +98,5 @@ void Storage_t::loadError() {
     if (!eeprom.readByteWithChecksum(ADDR_ERROR, ADDR_ERROR_CSUM, &data)) {
         // failed to read data, set error and blink led as well?
     }
-    status.errorState = static_cast<errorState_t>(data);
+    controller.setError(static_cast<errorState_t>(data));
 }

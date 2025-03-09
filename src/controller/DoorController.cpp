@@ -36,6 +36,35 @@ bool DoorController_t::isMoving() const {
     return status.moving;
 }
 
+int DoorController_t::getTotalSteps() const {
+    return status.totalSteps;
+}
+
+int DoorController_t::getPosition() const {
+    return status.currentPosition;
+}
+
+void DoorController_t::setCalib(const calibState data) {
+    status.calibState = data;
+}
+
+void DoorController_t::setPosition(const int data) {
+    status.currentPosition = data;
+}
+
+void DoorController_t::setError(const errorState data) {
+    status.errorState = data;
+}
+
+void DoorController_t::setTotalSteps(const int data) {
+    status.totalSteps = data;
+}
+
+void DoorController_t::setDoorStatus(const GarageDoor::doorState data) {
+    status.doorState = data;
+}
+
+
 bool DoorController_t::checkIfStuck() {
     uint32_t currentTime = time_us_32()/1000;
 
@@ -74,7 +103,7 @@ bool DoorController_t::checkIfStuck() {
 }
 
 bool DoorController_t::isStuck() const {
-    return status.errorState == STUCK;
+    return status.errorState;
 }
 
 void DoorController_t::calibrate() {

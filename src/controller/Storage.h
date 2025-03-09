@@ -9,11 +9,12 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 #include "hardware/EEPROM.h"
+#include "controller/DoorController.h"
 #include "types.h"
 
 class Storage_t {
     public:
-        explicit Storage_t(const EEPROM_t &eeprom, Status_t &status);
+        explicit Storage_t(const EEPROM_t &eeprom, DoorController_t& controller);
         ~Storage_t() = default;
         void saveCalib() const;
         void savePos() const;
@@ -29,7 +30,7 @@ class Storage_t {
 
     private:
         const EEPROM_t& eeprom;
-        Status_t &status;
+        DoorController_t& controller;
         const uint16_t ADDR_CALIB = 0x00;
         const uint16_t ADDR_CALIB_CSUM = 0x01;
 

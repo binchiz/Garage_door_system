@@ -34,10 +34,11 @@ int main() {
     LimitSwitch_t lower(17, true);
     StepperMotor_t motor(2, 3, 6, 13);
     RotaryEncoder_t encoder(28,27, true);
-
     LED_t leds(20, 21, 22);
 
+    EEPROM_t eeprom;
     DoorController_t controller(upper, lower, encoder, motor, leds);
+    Storage_t storage(eeprom, controller);
 
     GarageDoorSystem doorSystem;
 

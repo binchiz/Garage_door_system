@@ -31,6 +31,8 @@ class GarageDoorSystem {
         void initialize(DoorController_t& doorController,
                ButtonHandler_t& buttonHandler,
                MQTTHandler_t& mqttHandler);
+        void loadStoredStatus();
+        void saveStatus();
         void update();
         void addCommand(command c); //push command to queue. used by handlers
         void doorOpening();

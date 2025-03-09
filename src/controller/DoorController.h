@@ -25,12 +25,23 @@ public:
     [[nodiscard]] GarageDoor::doorState getDoorStatus() const; // returns a structure that contains the status. see types.h
     [[nodiscard]] bool isCalibrated() const;
     bool isMoving() const;
+    int getTotalSteps() const;
+    int getPosition() const;
+    bool isStuck() const;
+
+    void setCalib(calibState data);
+    void setPosition(int data);
+    void setError(errorState data);
+    void setTotalSteps(int data);
+    void setDoorStatus(GarageDoor::doorState data);
+
+
     void open(); // check encoder when motor running, if stuck, stop(), set errorstate and calibstate
     void close();
     void calibrate();
     void stop() const;
     [[nodiscard]] bool checkIfStuck(); // check if the door is actually moving, aka if the encoder is moving
-    bool isStuck() const;
+
     void controlLed();
 
 private:
