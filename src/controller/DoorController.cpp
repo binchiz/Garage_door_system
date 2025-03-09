@@ -36,44 +36,88 @@ bool DoorController_t::isMoving() const {
 }
 
 bool DoorController_t::checkIfStuck() {
+    uint32_t currentTime = time_us_32()/1000;
 
-    if (!encoder.hasMovedSinceLastCheck()) {
+    // If this is the first check after starting to move, initialize lastMovementTime
+    if (status.moving && moveStartTime == 0) {
+        moveStartTime = currentTime;
+        return false;
+    }
+
+    // If the encoder has moved, update the last movement time
+    if (encoder.hasMovedSinceLastCheck()) {
+        moveStartTime = currentTime;
+        return false;
+    }
+
+    // If we're not moving, reset lastMovementTime and return
+    if (!status.moving) {
+        moveStartTime = 0;
+        return false;
+    }
+
+    // Calculate time elapsed since last movement (in milliseconds)
+    uint32_t timeElapsed = (currentTime - moveStartTime);
+
+    // If we're supposed to be moving but haven't moved for a while, declare stuck
+    if (timeElapsed >= STUCK_TIMEOUT) {
         status.moving = false;
         status.errorState = STUCK;
         status.calibState = UNCALIBRATED;
         motor.stop();
+        moveStartTime = 0; // Reset for next movement
         return true;
     }
     return false;
+
 }
 
 void DoorController_t::calibrate() {
-    for (int i = 0; i < calibMargin/2; i++) {
-        motor.moveUp();
-    }
+    status.moving = true;
+    moveStartTime = time_us_32() / 1000;
     while (!lowerLimit.isPressed()) {
         motor.moveDown();
+        if (checkIfStuck()) {
+            std::cout << "Calibration failed: Door stuck while moving down" << std::endl;
+            return;
+        }
     }
+    std::cout<<"finished moving down, now start counting steps" << std::endl;
     int steps = 0;
     while (!upperLimit.isPressed()) {
         motor.moveUp();
         steps++;
+        if (checkIfStuck()) {
+            std::cout << "Calibration failed: Door stuck while moving up" << std::endl;
+            return;
+        }
+
     }
     for (int i = 0; i < calibMargin/2; i++) {
         motor.moveDown();
     }
-    status.totalSteps = steps-calibMargin;
+    status.totalSteps = steps - calibMargin;
+    status.currentPosition = 0; // Current position is calibMargin steps down from top
     status.calibState = CALIBRATED;
+    status.errorState = NORMAL;
     status.doorState = GarageDoor::OPENED;
-    std::cout << status.totalSteps << std::endl;
+    status.moving = false;
+
+    std::cout << "Calibration complete. Total steps: " << status.totalSteps << std::endl;
+    std::cout << "Current position: " << status.currentPosition << std::endl;
 }
 
 void DoorController_t::open() {
     status.moving = true;
     status.doorState = GarageDoor::OPENING;
+    moveStartTime = time_us_32() / 1000;
+    std::cout << "current pos: " << status.currentPosition<< std::endl;
     while (status.currentPosition > 0) {
-        motor.moveUp();
         status.currentPosition--;
+        if (checkIfStuck()) return;
+        motor.moveUp();
+        std::cout << "current pos: " << status.currentPosition<< std::endl;
+
     }
     status.doorState = GarageDoor::OPENED;
     status.moving = false;
@@ -93,9 +137,11 @@ void DoorController_t::open() {
 void DoorController_t::close() {
     status.moving = true;
     status.doorState = GarageDoor::CLOSING;
+    moveStartTime = time_us_32() / 1000;
     while (status.currentPosition < status.totalSteps) {
-        motor.moveDown();
         status.currentPosition++;
+        if (checkIfStuck()) return;
+        motor.moveDown();
     }
     status.doorState = GarageDoor::CLOSED;
     status.moving = false;

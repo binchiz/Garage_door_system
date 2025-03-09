@@ -36,6 +36,8 @@ private:
     StepperMotor_t& motor;
     Status_t status;
     int calibMargin;
+    uint32_t moveStartTime;
+    static constexpr uint32_t STUCK_TIMEOUT = 1000;
 
 };
 

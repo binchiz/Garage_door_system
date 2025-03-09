@@ -15,7 +15,7 @@ int main() {
     Button_t button2(7, true);
     RotaryEncoder_t encoder(28, 27, true);
     StepperMotor_t stepperMotor(2,3,6,13);
-    DoorController_t controller(upper, lower, button1, encoder, stepperMotor);
+    DoorController_t controller(upper, lower, encoder, stepperMotor);
     GPIOInterrupt::init();
 
     stdio_init_all();
