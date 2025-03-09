@@ -60,21 +60,11 @@ void MQTTHandler_t::processMessage(MQTT::MessageData &md) {
     std::string m = temp_buffer.data(); // received message
     std::cout << "Message received [length: " << message.payloadlen
             << "]: '" << temp_buffer.data() << "'" << std::endl;
-    string msg = "Sent " + m + " command";
-    publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, msg.data(), msg.size());
-    if (!doorController.isCalibrated()) {
-        if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
-        else {
-            string errmsg = "ERROR: NOT CALIBRATED";
-            publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, errmsg.data(), errmsg.size());
-        }
-    }
-    else {
-        if (caseInsensitiveCompare(m, "open")) system.addCommand(OPEN);
-        if (caseInsensitiveCompare(m, "close")) system.addCommand(CLOSE);
-        //if (caseInsensitiveCompare(m, "stop")) system.addCommand(STOP);
-        if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
-    }
+
+    if (caseInsensitiveCompare(m, "open")) system.addCommand(OPEN);
+    if (caseInsensitiveCompare(m, "close")) system.addCommand(CLOSE);
+    if (caseInsensitiveCompare(m, "stop")) system.addCommand(STOP);
+    if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
 
 
 }

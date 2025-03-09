@@ -5,6 +5,8 @@
 #include <ostream>
 
 static string sucessMSG = "SUCESS";
+static string noCalibMSG = "ERROR: Not calibrated";
+static string stuckMSG = "ERROR: Door stuck";
 static std::string RESPONSE_TOPIC = "garage/door/response";
 
 GarageDoorSystem::GarageDoorSystem(
@@ -61,6 +63,13 @@ void GarageDoorSystem::doorClosing() {
     }
 }
 
+void GarageDoorSystem::sendResponse() {
+    if (doorController->isStuck()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, stuckMSG.data(), stuckMSG.size());
+    if (!doorController->isCalibrated()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, noCalibMSG.data(), noCalibMSG.size());
+    else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
+}
+
+
 void GarageDoorSystem::run() {
     doorController->controlLed();
     update();
@@ -71,21 +80,23 @@ void GarageDoorSystem::run() {
         case OPEN:
             if (doorController->isCalibrated()) {
                 doorController->open();
-                mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
             }
+            sendResponse();
+            //else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, noCalibMSG.data(), noCalibMSG.size());
             break;
         case CLOSE:
             if (doorController->isCalibrated()) {
                 doorController->close();
-                mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
             }
+            sendResponse();
+            //else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, noCalibMSG.data(), noCalibMSG.size());
             break;
         case STOP:
             doorController->stop();
             break;
         case CALIB:
             doorController->calibrate();
-            mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
+            sendResponse();
             break;
             }
         }

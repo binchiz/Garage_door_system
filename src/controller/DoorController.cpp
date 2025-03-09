@@ -73,6 +73,10 @@ bool DoorController_t::checkIfStuck() {
 
 }
 
+bool DoorController_t::isStuck() const {
+    return status.errorState == STUCK;
+}
+
 void DoorController_t::calibrate() {
     leds.calibrationLed();
     status.moving = true;

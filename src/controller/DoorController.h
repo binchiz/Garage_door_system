@@ -30,6 +30,7 @@ public:
     void calibrate();
     void stop() const;
     [[nodiscard]] bool checkIfStuck(); // check if the door is actually moving, aka if the encoder is moving
+    bool isStuck() const;
     void controlLed();
 
 private:

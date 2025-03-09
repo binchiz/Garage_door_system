@@ -35,7 +35,9 @@ class GarageDoorSystem {
         void addCommand(command c); //push command to queue. used by handlers
         void doorOpening();
         void doorClosing();
+        void sendResponse();
         void run();
+
     private:
         DoorController_t* doorController = nullptr;
         ButtonHandler_t* buttonHandler = nullptr;
