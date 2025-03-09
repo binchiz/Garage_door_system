@@ -10,6 +10,7 @@ set(TEST_SOURCES
         controller_test.cpp
         eeprom_test.cpp
         storage_test.cpp
+        led_test.cpp
 )
 
 foreach (TEST_SOURCE ${TEST_SOURCES})

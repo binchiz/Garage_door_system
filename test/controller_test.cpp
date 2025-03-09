@@ -2,6 +2,7 @@
 #include <iostream>
 #include "controller/DoorController.h"
 #include "hardware/Button.h"
+#include "hardware/Led.h"
 #include "hardware/RotaryEncoder.h"
 #include "hardware/StepperMotor.h"
 #include "handler/GPIOInterrupt.h"
@@ -15,7 +16,10 @@ int main() {
     Button_t button2(7, true);
     RotaryEncoder_t encoder(28, 27, true);
     StepperMotor_t stepperMotor(2,3,6,13);
-    DoorController_t controller(upper, lower, encoder, stepperMotor);
+
+    LED_t leds(20, 21, 22);
+
+    DoorController_t controller(upper, lower, encoder, stepperMotor, leds);
     GPIOInterrupt::init();
 
     stdio_init_all();

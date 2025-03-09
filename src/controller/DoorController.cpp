@@ -11,7 +11,8 @@ DoorController_t::DoorController_t(
     LimitSwitch_t &upperLimit,
     LimitSwitch_t &lowerLimit,
     RotaryEncoder_t &encoder,
-    StepperMotor_t &motor) : upperLimit(upperLimit), lowerLimit(lowerLimit), encoder(encoder), motor(motor) {
+    StepperMotor_t &motor,
+    LED_t& leds) : upperLimit(upperLimit), lowerLimit(lowerLimit), encoder(encoder), motor(motor), leds(leds) {
     status = {
         .doorState = GarageDoor::IDLE,
         .errorState = NORMAL,
@@ -73,6 +74,7 @@ bool DoorController_t::checkIfStuck() {
 }
 
 void DoorController_t::calibrate() {
+    leds.calibrationLed();
     status.moving = true;
     moveStartTime = time_us_32() / 1000;
     while (!lowerLimit.isPressed()) {
@@ -91,7 +93,6 @@ void DoorController_t::calibrate() {
             std::cout << "Calibration failed: Door stuck while moving up" << std::endl;
             return;
         }
-
     }
     for (int i = 0; i < calibMargin/2; i++) {
         motor.moveDown();
@@ -108,16 +109,14 @@ void DoorController_t::calibrate() {
 }
 
 void DoorController_t::open() {
+    leds.movingLed();
     status.moving = true;
     status.doorState = GarageDoor::OPENING;
     moveStartTime = time_us_32() / 1000;
-    std::cout << "current pos: " << status.currentPosition<< std::endl;
     while (status.currentPosition > 0) {
         status.currentPosition--;
         if (checkIfStuck()) return;
         motor.moveUp();
-        std::cout << "current pos: " << status.currentPosition<< std::endl;
-
     }
     status.doorState = GarageDoor::OPENED;
     status.moving = false;
@@ -135,6 +134,7 @@ void DoorController_t::open() {
 }
 
 void DoorController_t::close() {
+    leds.movingLed();
     status.moving = true;
     status.doorState = GarageDoor::CLOSING;
     moveStartTime = time_us_32() / 1000;
@@ -159,6 +159,14 @@ void DoorController_t::close() {
 
 void DoorController_t::stop() const {
     motor.stop();
+}
+
+void DoorController_t::controlLed() {
+    if (!isCalibrated()) {
+        leds.notCalibratedLed();
+    } else {
+        leds.idleLed();
+    }
 }
 
 

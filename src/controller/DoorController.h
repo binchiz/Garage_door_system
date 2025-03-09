@@ -9,6 +9,7 @@
 #include "hardware/RotaryEncoder.h"
 #include "hardware/StepperMotor.h"
 #include "hardware/Button.h"
+#include "hardware/Led.h"
 #include "types.h"
 
 class DoorController_t {
@@ -17,7 +18,8 @@ public:
         LimitSwitch_t& upperLimit,
         LimitSwitch_t& lowerLimit,
         RotaryEncoder_t& encoder,
-        StepperMotor_t& motor
+        StepperMotor_t& motor,
+        LED_t& leds
     );
 
     [[nodiscard]] GarageDoor::doorState getDoorStatus() const; // returns a structure that contains the status. see types.h
@@ -28,17 +30,18 @@ public:
     void calibrate();
     void stop() const;
     [[nodiscard]] bool checkIfStuck(); // check if the door is actually moving, aka if the encoder is moving
+    void controlLed();
 
 private:
     LimitSwitch_t& upperLimit;
     LimitSwitch_t& lowerLimit;
     RotaryEncoder_t& encoder;
     StepperMotor_t& motor;
+    LED_t& leds;
     Status_t status;
     int calibMargin;
     uint32_t moveStartTime;
     static constexpr uint32_t STUCK_TIMEOUT = 1000;
-
 };
 
 #endif //DOORCONTROLLER_H

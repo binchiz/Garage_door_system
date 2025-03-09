@@ -60,8 +60,10 @@ add_library(${PROJECT_NAME}_lib STATIC
         src/handler/GPIOInterrupt.cpp
         src/handler/GPIOInterrupt.h
         src/debug.h
+        src/hardware/led.cpp
+        src/hardware/led.h
 
-#        ${MQTT_SOURCES}
+        #        ${MQTT_SOURCES}
 #        src/handler/lib/mqtt/Countdown.h
 #        src/handler/lib/mqtt/Countdown.cpp
 #        src/handler/lib/mqtt/IPStack.h

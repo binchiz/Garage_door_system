@@ -62,32 +62,32 @@ void GarageDoorSystem::doorClosing() {
 }
 
 void GarageDoorSystem::run() {
-        update();
-        if (!commandQueue.empty()) {
-            command command = commandQueue.front();
-            commandQueue.pop();
-            switch (command) {
-                case OPEN:
-                    if (doorController->isCalibrated()) {
-                        doorController->open();
-                        mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
-                    }
-                    break;
-                case CLOSE:
-                    if (doorController->isCalibrated()) {
-                        doorController->close();
-                        mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
-                    }
-                    break;
-                case STOP:
-                    doorController->stop();
-                    break;
-                case CALIB:
-                    doorController->calibrate();
-                    mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
-                    break;
+    doorController->controlLed();
+    update();
+    if (!commandQueue.empty()) {
+        command command = commandQueue.front();
+        commandQueue.pop();
+        switch (command) {
+        case OPEN:
+            if (doorController->isCalibrated()) {
+                doorController->open();
+                mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
             }
-
+            break;
+        case CLOSE:
+            if (doorController->isCalibrated()) {
+                doorController->close();
+                mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
+            }
+            break;
+        case STOP:
+            doorController->stop();
+            break;
+        case CALIB:
+            doorController->calibrate();
+            mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
+            break;
+            }
         }
     }
 

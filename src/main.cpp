@@ -11,6 +11,7 @@
 #include "handler/GPIOInterrupt.h"
 #include "hardware/EEPROM.h"
 #include "hardware/StepperMotor.h"
+#include "hardware/LED.h"
 
 #include "handler/ButtonHandler.h"
 #include "handler/MQTTHandler.h"
@@ -34,7 +35,9 @@ int main() {
     StepperMotor_t motor(2, 3, 6, 13);
     RotaryEncoder_t encoder(28,27, true);
 
-    DoorController_t controller(upper, lower, encoder, motor);
+    LED_t leds(20, 21, 22);
+
+    DoorController_t controller(upper, lower, encoder, motor, leds);
 
     GarageDoorSystem doorSystem;
 
