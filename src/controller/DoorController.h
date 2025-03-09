@@ -23,12 +23,13 @@ public:
     );
 
     [[nodiscard]] GarageDoor::doorState getDoorStatus() const; // returns a structure that contains the status. see types.h
-    [[nodiscard]] bool isCalibrated() const;
+    [[nodiscard]] calibState_t isCalibrated() const;
     bool isMoving() const;
     int getTotalSteps() const;
     int getPosition() const;
-    bool isStuck() const;
+    [[nodiscard]] errorState_t isStuck() const;
 
+    void setMoving(bool isMoving);
     void setCalib(calibState data);
     void setPosition(int data);
     void setError(errorState data);

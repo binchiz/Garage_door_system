@@ -7,8 +7,19 @@
 #include <string>
 
 typedef enum command {OPEN, CLOSE, STOP, CALIB} command;
+
 namespace GarageDoor {
     typedef enum doorState {OPENING, OPENED, CLOSING, CLOSED, IDLE} doorState_t;
+    inline const char* getDoorStateString(doorState_t state) {
+        switch (state) {
+            case OPENING:  return "OPENING";
+            case OPENED:   return "OPENED";
+            case CLOSING:  return "CLOSING";
+            case CLOSED:   return "CLOSED";
+            case IDLE:     return "IDLE";
+            default:       return "UNKNOWN";
+        }
+    }
 }
 typedef enum errorState {NORMAL, STUCK} errorState_t;
 typedef enum calibState {UNCALIBRATED, CALIBRATED} calibState_t;
@@ -21,6 +32,33 @@ struct Status_t {
     int totalSteps;
     int currentPosition; //当前位置看步数
 };
+
+inline const char* getErrorStateString(errorState_t state) {
+    switch (state) {
+        case NORMAL:  return "NORMAL";
+        case STUCK:   return "STUCK";
+        default:      return "UNKNOWN";
+    }
+}
+
+inline const char* getCalibStateString(calibState_t state) {
+    switch (state) {
+        case UNCALIBRATED:  return "UNCALIBRATED";
+        case CALIBRATED:    return "CALIBRATED";
+        default:            return "UNKNOWN";
+    }
+}
+
+namespace MQTTTMessage {
+    constexpr const char* STATUS_TOPIC = "garage/door/status";
+    constexpr const char* COMMAND_TOPIC = "garage/door/command";
+    constexpr const char* RESPONSE_TOPIC = "garage/door/response";
+    constexpr const char* SUCCESS_MSG = "SUCCESS";
+    constexpr const char* STUCK_MSG = "DOOR STUCK";
+    constexpr const char* NO_CALIB_MSG = "NOT CALIBRATED";
+}
+
+
 
 
 

@@ -1,31 +1,54 @@
 
 #include "GarageDoorSytem.h"
+#include "types.h"
 
 #include <iostream>
-#include <ostream>
 
-static string sucessMSG = "SUCESS";
-static string noCalibMSG = "ERROR: Not calibrated";
-static string stuckMSG = "ERROR: Door stuck";
-static std::string RESPONSE_TOPIC = "garage/door/response";
+using namespace MQTTTMessage;
 
 GarageDoorSystem::GarageDoorSystem(
     DoorController_t& doorController,
     ButtonHandler_t& buttonHandler,
-    MQTTHandler_t& mqttHandler)
+    MQTTHandler_t& mqttHandler,
+    Storage_t& storage)
 {
     this->doorController = &doorController;
     this->buttonHandler = &buttonHandler;
     this->mqttHandler = &mqttHandler;
+    this->storage = &storage;
 }
 
 void GarageDoorSystem::initialize(DoorController_t& doorController,
                                 ButtonHandler_t& buttonHandler,
-                                MQTTHandler_t& mqttHandler) {
+                                MQTTHandler_t& mqttHandler,
+                                Storage_t& storage) {
     this->doorController = &doorController;
     this->buttonHandler = &buttonHandler;
     this->mqttHandler = &mqttHandler;
+    this->storage = &storage;
 }
+
+void GarageDoorSystem::saveStatus() const {
+    storage->saveCalib();
+    storage->saveError();
+    storage->savePos();
+    storage->saveState();
+    storage->saveTotalSteps();
+}
+
+void GarageDoorSystem::loadStoredStatus() const {
+    storage->loadCalib();
+    storage->loadError();
+    storage->loadPos();
+    storage->loadState();
+    storage->loadTotalSteps();
+}
+
+void GarageDoorSystem::restore() {
+    //
+}
+
+
 
 void GarageDoorSystem::update() {
     buttonHandler->update();
@@ -38,36 +61,34 @@ void GarageDoorSystem::addCommand(const command c) {
 }
 
 void GarageDoorSystem::doorOpening() {
-    bool opening = true;
-    while (opening) {
-        doorController->open();
-        if (!doorController->isMoving()) opening = false;
-        update();
-        if (!commandQueue.empty()) {
-            commandQueue.pop();
-            opening = false;
-        }
-    }
+    //
 }
 
 void GarageDoorSystem::doorClosing() {
-    bool closing = true;
-    while (closing) {
-        doorController->close();
-        if (!doorController->isMoving()) closing = false;
-        update();
-        if (!commandQueue.empty()) {
-            commandQueue.pop();
-            closing = false;
-        }
-    }
+    //
 }
 
 void GarageDoorSystem::sendResponse() {
-    if (doorController->isStuck()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, stuckMSG.data(), stuckMSG.size());
-    if (!doorController->isCalibrated()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, noCalibMSG.data(), noCalibMSG.size());
-    else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, sucessMSG.data(), sucessMSG.size());
+    if (doorController->isStuck()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(STUCK_MSG)), strlen(STUCK_MSG));
+    if (!doorController->isCalibrated()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(NO_CALIB_MSG)), strlen(NO_CALIB_MSG));
+    else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(SUCCESS_MSG)), strlen(SUCCESS_MSG));
 }
+
+
+void GarageDoorSystem::reportStatus() {
+
+    std::string statusMsg = "Door:";
+    statusMsg += GarageDoor::getDoorStateString(doorController->getDoorStatus());
+    statusMsg += ",Error:";
+    statusMsg += getErrorStateString(doorController->isStuck());
+    statusMsg += ",Calib:";
+    statusMsg += getCalibStateString(doorController->isCalibrated());
+
+    mqttHandler->publish_MQTT(MQTT::QOS1, STATUS_TOPIC, statusMsg.data(), statusMsg.size());
+
+}
+
+
 
 
 void GarageDoorSystem::run() {
@@ -80,16 +101,20 @@ void GarageDoorSystem::run() {
         case OPEN:
             if (doorController->isCalibrated()) {
                 doorController->open();
+                reportStatus();
             }
             sendResponse();
-            //else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, noCalibMSG.data(), noCalibMSG.size());
+            saveStatus();
+            reportStatus();
             break;
         case CLOSE:
             if (doorController->isCalibrated()) {
                 doorController->close();
+                reportStatus();
             }
             sendResponse();
-            //else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, noCalibMSG.data(), noCalibMSG.size());
+            saveStatus();
+            reportStatus();
             break;
         case STOP:
             doorController->stop();
@@ -97,6 +122,8 @@ void GarageDoorSystem::run() {
         case CALIB:
             doorController->calibrate();
             sendResponse();
+            saveStatus();
+            reportStatus();
             break;
             }
         }

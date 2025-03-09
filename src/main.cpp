@@ -46,14 +46,14 @@ int main() {
     MQTTHandler_t mqtt_handler{
         controller,
         doorSystem,
-        "",     // WiFi SSID
-        "", // WiFi 密码
+        "B38-2G",     // WiFi SSID
+        "[pwd]", // WiFi 密码
         "192.168.1.107",    // MQTT 服务器地址
         2883,               // MQTT 服务器端口
         "GarageDoor-Client" // 客户端ID
     };
 
-    doorSystem.initialize(controller, buttonHandler, mqtt_handler);
+    doorSystem.initialize(controller, buttonHandler, mqtt_handler, storage);
 
 
     std::cout << "initialization complete" << std::endl;

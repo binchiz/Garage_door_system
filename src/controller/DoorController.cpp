@@ -28,7 +28,7 @@ GarageDoor::doorState DoorController_t::getDoorStatus() const {
     return status.doorState;
 }
 
-bool DoorController_t::isCalibrated() const {
+calibState_t DoorController_t::isCalibrated() const {
     return status.calibState;
 }
 
@@ -43,6 +43,11 @@ int DoorController_t::getTotalSteps() const {
 int DoorController_t::getPosition() const {
     return status.currentPosition;
 }
+
+void DoorController_t::setMoving(const bool isMoving) {
+    status.moving = isMoving;
+}
+
 
 void DoorController_t::setCalib(const calibState data) {
     status.calibState = data;
@@ -102,7 +107,7 @@ bool DoorController_t::checkIfStuck() {
 
 }
 
-bool DoorController_t::isStuck() const {
+errorState_t DoorController_t::isStuck() const {
     return status.errorState;
 }
 
