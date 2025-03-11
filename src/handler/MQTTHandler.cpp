@@ -61,11 +61,10 @@ void MQTTHandler_t::processMessage(MQTT::MessageData &md) {
     std::cout << "Message received [length: " << message.payloadlen
             << "]: '" << temp_buffer.data() << "'" << std::endl;
 
+    if (caseInsensitiveCompare(m, "stop")) doorController.stop();
     if (caseInsensitiveCompare(m, "open")) system.addCommand(OPEN);
     if (caseInsensitiveCompare(m, "close")) system.addCommand(CLOSE);
-    if (caseInsensitiveCompare(m, "stop")) system.addCommand(STOP);
     if (caseInsensitiveCompare(m, "calib")) system.addCommand(CALIB);
-
 
 }
 

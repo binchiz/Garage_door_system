@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <string>
 
-typedef enum command {OPEN, CLOSE, STOP, CALIB} command;
+typedef enum command {OPEN, CLOSE, STOP, CALIB, NONE} command;
 
 namespace GarageDoor {
     typedef enum doorState {OPENING, OPENED, CLOSING, CLOSED, IDLE} doorState_t;

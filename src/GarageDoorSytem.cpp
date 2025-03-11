@@ -52,7 +52,7 @@ void GarageDoorSystem::restore() {
 
 void GarageDoorSystem::update() {
     buttonHandler->update();
-    mqttHandler->yield_MQTT(100);
+    mqttHandler->yield_MQTT(2000);
 }
 
 

@@ -3,9 +3,13 @@
 //
 
 #include "DoorController.h"
+#include "handler/ButtonHandler.h"
+#include "handler/MQTTHandler.h"
 #include "types.h"
 
 #include <iostream>
+
+
 
 DoorController_t::DoorController_t(
     LimitSwitch_t &upperLimit,
@@ -22,6 +26,14 @@ DoorController_t::DoorController_t(
         .currentPosition = 0,
     };
     calibMargin = 300;
+}
+
+void DoorController_t::setButtonHandler(ButtonHandler_t* handler) {
+    buttonHandler = handler;
+}
+
+void DoorController_t::setMQTTHandler(MQTTHandler_t* handler) {
+    mqttHandler = handler;
 }
 
 GarageDoor::doorState DoorController_t::getDoorStatus() const {
@@ -152,23 +164,16 @@ void DoorController_t::open() {
     status.doorState = GarageDoor::OPENING;
     moveStartTime = time_us_32() / 1000;
     while (status.currentPosition > 0) {
-        status.currentPosition--;
+         status.currentPosition--;
         if (checkIfStuck()) return;
         motor.moveUp();
+        buttonHandler->update();
+        mqttHandler->yield_MQTT(1);
+        if (!isMoving()) return;
     }
     status.doorState = GarageDoor::OPENED;
     status.moving = false;
 
-    // if (status.currentPosition > 0) {
-    //     status.moving = true;
-    //     status.doorState = GarageDoor::OPENING;
-    //     motor.moveUp();
-    //     status.currentPosition--;
-    // }
-    // else {
-    //     status.doorState = GarageDoor::OPENED;
-    //     status.moving = false;
-    // }
 }
 
 void DoorController_t::close() {
@@ -180,23 +185,17 @@ void DoorController_t::close() {
         status.currentPosition++;
         if (checkIfStuck()) return;
         motor.moveDown();
+        buttonHandler->update();
+        mqttHandler->yield_MQTT(1);
+        if (!isMoving()) return;
     }
     status.doorState = GarageDoor::CLOSED;
     status.moving = false;
-    // if (status.currentPosition < status.totalSteps) {
-    //     status.moving = true;
-    //     status.doorState = GarageDoor::CLOSING;
-    //     motor.moveDown();
-    //     status.currentPosition++;
-    // }
-    // else {
-    //     status.doorState = GarageDoor::CLOSED;
-    //     status.moving = false;
-    // }
 }
 
-void DoorController_t::stop() const {
+void DoorController_t::stop() {
     motor.stop();
+    status.moving = false;
 }
 
 void DoorController_t::controlLed() {

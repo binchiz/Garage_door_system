@@ -12,6 +12,9 @@
 #include "hardware/Led.h"
 #include "types.h"
 
+class ButtonHandler_t;
+class MQTTHandler_t;
+
 class DoorController_t {
 public:
     DoorController_t(
@@ -21,6 +24,9 @@ public:
         StepperMotor_t& motor,
         LED_t& leds
     );
+
+    void setButtonHandler(ButtonHandler_t* handler);
+    void setMQTTHandler(MQTTHandler_t* handler);
 
     [[nodiscard]] GarageDoor::doorState getDoorStatus() const; // returns a structure that contains the status. see types.h
     [[nodiscard]] calibState_t isCalibrated() const;
@@ -40,7 +46,7 @@ public:
     void open(); // check encoder when motor running, if stuck, stop(), set errorstate and calibstate
     void close();
     void calibrate();
-    void stop() const;
+    void stop();
     [[nodiscard]] bool checkIfStuck(); // check if the door is actually moving, aka if the encoder is moving
 
     void controlLed();
@@ -55,6 +61,9 @@ private:
     int calibMargin;
     uint32_t moveStartTime;
     static constexpr uint32_t STUCK_TIMEOUT = 1000;
+
+    ButtonHandler_t* buttonHandler = nullptr;
+    MQTTHandler_t* mqttHandler = nullptr;
 };
 
 #endif //DOORCONTROLLER_H

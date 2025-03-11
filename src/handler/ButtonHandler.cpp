@@ -35,15 +35,16 @@ command ButtonHandler_t::createCommandFromInput() const {
             case GarageDoor::OPENING:
                 return CLOSE;
             default:
-                return STOP;
+                return NONE;
         }
     }
-    return STOP;
+    return NONE;
 }
 
 void ButtonHandler_t::update() const {
     const command c = createCommandFromInput();
-    system.addCommand(c);
+    if (c==STOP) doorController.stop();
+    else if (c!=NONE) system.addCommand(c);
 }
 
 
