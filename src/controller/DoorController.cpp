@@ -25,7 +25,6 @@ DoorController_t::DoorController_t(
         .totalSteps = 0,
         .currentPosition = 0,
     };
-    calibMargin = 300;
 }
 
 void DoorController_t::setButtonHandler(ButtonHandler_t* handler) {
@@ -144,10 +143,7 @@ void DoorController_t::calibrate() {
             return;
         }
     }
-    for (int i = 0; i < calibMargin/2; i++) {
-        motor.moveDown();
-    }
-    status.totalSteps = steps - calibMargin;
+    status.totalSteps = steps;
     status.currentPosition = 0; // Current position is calibMargin steps down from top
     status.calibState = CALIBRATED;
     status.errorState = NORMAL;
@@ -163,7 +159,7 @@ void DoorController_t::open() {
     status.moving = true;
     status.doorState = GarageDoor::OPENING;
     moveStartTime = time_us_32() / 1000;
-    while (status.currentPosition > 0) {
+    while (!upperLimit.isPressed()) {
          status.currentPosition--;
         if (checkIfStuck()) return;
         motor.moveUp();
@@ -173,7 +169,6 @@ void DoorController_t::open() {
     }
     status.doorState = GarageDoor::OPENED;
     status.moving = false;
-
 }
 
 void DoorController_t::close() {
@@ -181,7 +176,7 @@ void DoorController_t::close() {
     status.moving = true;
     status.doorState = GarageDoor::CLOSING;
     moveStartTime = time_us_32() / 1000;
-    while (status.currentPosition < status.totalSteps) {
+    while (!lowerLimit.isPressed()) {
         status.currentPosition++;
         if (checkIfStuck()) return;
         motor.moveDown();

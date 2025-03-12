@@ -36,6 +36,7 @@ void GarageDoorSystem::saveStatus() const {
     storage->saveTotalSteps();
 }
 
+
 void GarageDoorSystem::loadStoredStatus() const {
     storage->loadCalib();
     storage->loadError();
@@ -52,7 +53,7 @@ void GarageDoorSystem::restore() {
 
 void GarageDoorSystem::update() {
     buttonHandler->update();
-    mqttHandler->yield_MQTT(2000);
+    mqttHandler->yield_MQTT(100);
 }
 
 
@@ -60,13 +61,6 @@ void GarageDoorSystem::addCommand(const command c) {
     commandQueue.push(c);
 }
 
-void GarageDoorSystem::doorOpening() {
-    //
-}
-
-void GarageDoorSystem::doorClosing() {
-    //
-}
 
 void GarageDoorSystem::sendResponse() {
     if (doorController->isStuck()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(STUCK_MSG)), strlen(STUCK_MSG));
@@ -99,7 +93,7 @@ void GarageDoorSystem::run() {
         commandQueue.pop();
         switch (command) {
         case OPEN:
-            if (doorController->isCalibrated()) {
+            if (doorController->isCalibrated()&(doorController->getDoorStatus()!=GarageDoor::OPENED)) {
                 doorController->open();
                 reportStatus();
             }
@@ -108,7 +102,7 @@ void GarageDoorSystem::run() {
             reportStatus();
             break;
         case CLOSE:
-            if (doorController->isCalibrated()) {
+            if (doorController->isCalibrated()&doorController->getDoorStatus()!=GarageDoor::CLOSED) {
                 doorController->close();
                 reportStatus();
             }

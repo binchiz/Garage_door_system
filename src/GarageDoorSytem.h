@@ -37,8 +37,6 @@ class GarageDoorSystem {
         void restore();
         void update(); //update commands
         void addCommand(command c); //push command to queue. used by handlers
-        void doorOpening();
-        void doorClosing();
         void sendResponse();
         void reportStatus();
         void run();

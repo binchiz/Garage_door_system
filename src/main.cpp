@@ -46,9 +46,9 @@ int main() {
     MQTTHandler_t mqtt_handler{
         controller,
         doorSystem,
-        "",     // WiFi SSID
-        "", // WiFi 密码
-        "192.168.1.107",    // MQTT 服务器地址
+        "zzy_phone",     // WiFi SSID
+        "zzy88888", // WiFi 密码
+        "172.20.10.3",    // MQTT 服务器地址
         2883,               // MQTT 服务器端口
         "GarageDoor-Client" // 客户端ID
     };
@@ -62,6 +62,4 @@ int main() {
     while (true) {
         doorSystem.run();
     }
-
-
 }
