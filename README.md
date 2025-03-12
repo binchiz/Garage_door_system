@@ -1,113 +1,111 @@
-# Garage Door Controller System
+# Garage Door Control System
 
-A C++ implementation of a garage door control system using a Raspberry Pi Pico (RP2040). The system provides both local button control and remote MQTT control capabilities.
+## Overview
+This project implements a garage door control system using a Raspberry Pi Pico (RP2040) microcontroller. The system provides both local and remote control of a garage door through physical buttons and MQTT communication, with status reporting, error detection, and persistence across power cycles.
 
 ## Features
+- **Dual Control Modes**: Operate the door locally using buttons or remotely via MQTT
+- **Automatic Calibration**: System calibrates door movement ranges using limit switches
+- **Status Monitoring**: Real-time reporting of door status via MQTT
+- **Error Detection**: Detects when the door gets stuck and enters error state
+- **Persistent State**: Preserves calibration and door state across power cycles
+- **Visual Feedback**: LED indicators for different system states
 
-- Local control via physical buttons
-- Remote control through MQTT
-- Automatic calibration system
-- Position tracking using rotary encoder
-- Limit switch safety controls
-- Status reporting via MQTT
-- Error detection and handling
-
-## Hardware Requirements
-
+## Hardware Components
 - Raspberry Pi Pico (RP2040)
-- Stepper motor
-- Rotary encoder
-- 2x Limit switches
-- 3x Control buttons
-- Power supply
-- WiFi connection (for MQTT)
+- Stepper motor for door movement
+- Rotary encoder for movement detection
+- Two limit switches to detect door position limits
+- Three buttons for local control
+- Three LEDs for status indication
+- EEPROM for state persistence
 
-## Software Dependencies
+## Pin Assignments
+- **Stepper Motor Controller**: GP2, GP3, GP6, GP13
+- **LEDs**: GP20, GP21, GP22
+- **Buttons**: SW0 (GP9), SW1 (GP8), SW2 (GP7)
+- **Limit Switches**: Upper (GP16), Lower (GP17)
+- **Rotary Encoder**: A (GP28), B (GP27)
+- **EEPROM**: SDA (GP14), SCL (GP15)
 
-- C++17 or later
-- CMake 3.12 or later
+## System Architecture
+The software follows an object-oriented design with clear separation of responsibilities:
+
+1. **Hardware Layer**:
+   - `StepperMotor`: Controls the motor that moves the door
+   - `RotaryEncoder`: Detects movement direction and position
+   - `Button`/`LimitSwitch`: Handles input detection
+   - `LED`: Provides visual feedback
+   - `EEPROM`: Persistent storage
+
+2. **Controller Layer**:
+   - `DoorController`: Manages the hardware components
+   - `Storage`: Handles saving/loading state from EEPROM
+
+3. **Handler Layer**:
+   - `ButtonHandler`: Processes button inputs
+   - `MQTTHandler`: Handles remote communication
+   - `GPIOInterrupt`: Manages hardware interrupts
+
+4. **System Layer**:
+   - `GarageDoorSystem`: Main system controller coordinating all components
+
+## Operation Guide
+
+### Local Operation
+- **Calibration**: Press SW0 and SW2 simultaneously to start calibration
+- **Open/Close**: Press SW1 to operate the door:
+  - When door is closed → Opens the door
+  - When door is open → Closes the door
+  - While door is moving → Stops the door
+  - When door has been stopped → Moves in the opposite direction
+
+### Remote Operation via MQTT
+- **Subscribe to**: `garage/door/command` to send commands
+- **Publish to**: `garage/door/status` to receive status updates
+- **Response Topic**: `garage/door/response` for command responses
+
+### Status Indicators
+- **Not Calibrated**: LED1 blinking fast
+- **Opening/Closing**: LED1 constant on
+- **Idle (not moving)**: LED1 slowly blinking
+- **Calibrating**: All three LEDs on
+
+## MQTT Commands
+- `open`: Opens the door
+- `close`: Closes the door
+- `stop`: Stops door movement
+- `calib`: Initiates calibration procedure
+
+## Status Reporting
+The system reports status in the following format:
+```
+Door:[OPENED/CLOSED/OPENING/CLOSING/IDLE],Error:[NORMAL/STUCK],Calib:[CALIBRATED/UNCALIBRATED]
+```
+
+## Building and Flashing
+This project is built using CMake and the Pico SDK. To build:
+
+1. Set up the Pico SDK environment
+2. Configure with CMake:
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   ```
+3. Build the project:
+   ```
+   make
+   ```
+4. Flash the binary to the Pico (connect while holding BOOTSEL button)
+
+## Important Notes
+- Never turn the stepper motor or move the belt by hand!
+- Door will not operate in uncalibrated state
+- Remote control does not work in uncalibrated state
+- If the door gets stuck, it will enter error state and require recalibration
+
+## Dependencies
 - Pico SDK
-- libmosquitto
-- Docker (for MQTT broker)
-
-## Project Structure
-
-```
-garage_door_system/
-├── src/                # Source files
-├── include/            # Public headers
-├── tests/             # Test files
-├── docs/              # Documentation
-└── tools/             # Utility scripts
-```
-
-## Building the Project
-
-1. Clone the repository:
-```bash
-git clone [repository-url]
-cd garage_door_system
-```
-
-2. Create build directory:
-```bash
-mkdir build
-cd build
-```
-
-3. Configure and build:
-```bash
-cmake ..
-make
-```
-
-## MQTT Setup
-
-1. Start the MQTT broker using Docker:
-```bash
-docker-compose up -d
-```
-
-2. MQTT topics:
-- Commands: `garage/door/command`
-- Status: `garage/door/status`
-- Errors: `garage/door/error`
-
-## Usage
-
-### Local Control
-- Single press of SW1: Open/Close door
-- Press while moving: Stop door
-- SW0 + SW2 (2 seconds): Start calibration
-
-### MQTT Control
-Send commands to `garage/door/command`:
-```json
-{
-    "command": "OPEN|CLOSE|STOP|CALIBRATE",
-    "id": "unique-command-id",
-    "timestamp": "2024-02-23T10:30:00Z"
-}
-```
-
-## Pin Configuration
-
-- Stepper Motor: GP2, GP3, GP6, GP13
-- Limit Switches: Grove connector (2 GPIOs)
-- Rotary Encoder: Grove connector (2 GPIOs)
-- Control Buttons: GP20, GP21, GP22
-
-## State Machine
-
-The system implements the following states:
-- UNCALIBRATED: Initial state, needs calibration
-- IDLE: Door fully open or closed
-- OPENING: Door moving up
-- CLOSING: Door moving down
-- STOPPED: Door stopped mid-movement
-- ERROR: System error state
-- CALIBRATING: System performing calibration
-
-
-## License
-
+- MQTT Client library
+- EEPROM I2C library
