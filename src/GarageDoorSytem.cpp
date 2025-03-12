@@ -55,14 +55,14 @@ void GarageDoorSystem::addCommand(const command c) {
 }
 
 
-void GarageDoorSystem::sendResponse() {
+void GarageDoorSystem::sendResponse() const {
     if (doorController->isStuck()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(STUCK_MSG)), strlen(STUCK_MSG));
     if (!doorController->isCalibrated()) mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(NO_CALIB_MSG)), strlen(NO_CALIB_MSG));
     else mqttHandler->publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(SUCCESS_MSG)), strlen(SUCCESS_MSG));
 }
 
 
-void GarageDoorSystem::reportStatus() {
+void GarageDoorSystem::reportStatus() const {
 
     std::string statusMsg = "Door:";
     statusMsg += GarageDoor::getDoorStateString(doorController->getDoorStatus());

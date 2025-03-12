@@ -23,6 +23,8 @@ DoorController_t::DoorController_t(
     };
 }
 
+//setters
+
 void DoorController_t::setButtonHandler(ButtonHandler_t* handler) {
     buttonHandler = handler;
 }
@@ -30,23 +32,6 @@ void DoorController_t::setButtonHandler(ButtonHandler_t* handler) {
 void DoorController_t::setMQTTHandler(MQTTHandler_t* handler) {
     mqttHandler = handler;
 }
-
-GarageDoor::doorState DoorController_t::getDoorStatus() const {
-    return status.doorState;
-}
-
-calibState_t DoorController_t::isCalibrated() const {
-    return status.calibState;
-}
-
-bool DoorController_t::isMoving() const {
-    return status.moving;
-}
-
-int DoorController_t::getTotalSteps() const {
-    return status.totalSteps;
-}
-
 
 void DoorController_t::setMoving(const bool isMoving) {
     status.moving = isMoving;
@@ -70,6 +55,23 @@ void DoorController_t::setDoorStatus(const GarageDoor::doorState data) {
     status.doorState = data;
 }
 
+//getters
+
+GarageDoor::doorState DoorController_t::getDoorStatus() const {
+    return status.doorState;
+}
+
+calibState_t DoorController_t::isCalibrated() const {
+    return status.calibState;
+}
+
+bool DoorController_t::isMoving() const {
+    return status.moving;
+}
+
+int DoorController_t::getTotalSteps() const {
+    return status.totalSteps;
+}
 
 bool DoorController_t::checkIfStuck() {
     uint32_t currentTime = time_us_32()/1000;
@@ -177,7 +179,7 @@ void DoorController_t::stop() {
     status.moving = false;
 }
 
-void DoorController_t::controlLed() {
+void DoorController_t::controlLed() const {
     if (!isCalibrated()) {
         leds.notCalibratedLed();
     } else {

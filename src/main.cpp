@@ -43,7 +43,7 @@ int main() {
         "",
         "192.168.1.107",
         2883,
-        "GarageDoor-Client" 
+        "GarageDoor-Client"
     };
 
     controller.setButtonHandler(&buttonHandler);

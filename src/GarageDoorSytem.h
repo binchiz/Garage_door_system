@@ -36,8 +36,8 @@ class GarageDoorSystem {
         void saveStatus() const;
         void update(); //update commands
         void addCommand(command c); //push command to queue. used by handlers
-        void sendResponse();
-        void reportStatus();
+        void sendResponse() const;
+        void reportStatus() const;
         void run();
 
     private:

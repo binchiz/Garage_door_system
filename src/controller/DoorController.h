@@ -30,8 +30,8 @@ public:
 
     [[nodiscard]] GarageDoor::doorState getDoorStatus() const; // returns a structure that contains the status. see types.h
     [[nodiscard]] calibState_t isCalibrated() const;
-    bool isMoving() const;
-    int getTotalSteps() const;
+    [[nodiscard]] bool isMoving() const;
+    [[nodiscard]] int getTotalSteps() const;
     [[nodiscard]] errorState_t isStuck() const;
 
     void setMoving(bool isMoving);
@@ -47,7 +47,7 @@ public:
     void stop();
     [[nodiscard]] bool checkIfStuck(); // check if the door is actually moving, aka if the encoder is moving
 
-    void controlLed();
+    void controlLed() const;
 
 private:
     LimitSwitch_t& upperLimit;
