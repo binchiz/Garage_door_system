@@ -34,7 +34,6 @@ class GarageDoorSystem {
                Storage_t& storage);
         void loadStoredStatus() const;
         void saveStatus() const;
-        void restore();
         void update(); //update commands
         void addCommand(command c); //push command to queue. used by handlers
         void sendResponse();

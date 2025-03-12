@@ -32,12 +32,10 @@ public:
     [[nodiscard]] calibState_t isCalibrated() const;
     bool isMoving() const;
     int getTotalSteps() const;
-    int getPosition() const;
     [[nodiscard]] errorState_t isStuck() const;
 
     void setMoving(bool isMoving);
     void setCalib(calibState data);
-    void setPosition(int data);
     void setError(errorState data);
     void setTotalSteps(int data);
     void setDoorStatus(GarageDoor::doorState data);
@@ -60,6 +58,7 @@ private:
     Status_t status;
     uint32_t moveStartTime;
     static constexpr uint32_t STUCK_TIMEOUT = 1000;
+    static constexpr int calibMargin = 300;
 
     ButtonHandler_t* buttonHandler = nullptr;
     MQTTHandler_t* mqttHandler = nullptr;

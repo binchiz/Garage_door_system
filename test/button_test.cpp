@@ -33,6 +33,7 @@ int main() {
         }
 
         if (limitSwitchLower.isPressed()) {
+
             std::cout << "Lower limit switch pressed\n";
         }
         if (limitSwitchUpper.isPressed()) {

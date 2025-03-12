@@ -31,7 +31,6 @@ void GarageDoorSystem::initialize(DoorController_t& doorController,
 void GarageDoorSystem::saveStatus() const {
     storage->saveCalib();
     storage->saveError();
-    storage->savePos();
     storage->saveState();
     storage->saveTotalSteps();
 }
@@ -40,15 +39,9 @@ void GarageDoorSystem::saveStatus() const {
 void GarageDoorSystem::loadStoredStatus() const {
     storage->loadCalib();
     storage->loadError();
-    storage->loadPos();
     storage->loadState();
     storage->loadTotalSteps();
 }
-
-void GarageDoorSystem::restore() {
-    //
-}
-
 
 
 void GarageDoorSystem::update() {
@@ -82,9 +75,6 @@ void GarageDoorSystem::reportStatus() {
 
 }
 
-
-
-
 void GarageDoorSystem::run() {
     doorController->controlLed();
     update();
@@ -94,8 +84,9 @@ void GarageDoorSystem::run() {
         switch (command) {
         case OPEN:
             if (doorController->isCalibrated()&(doorController->getDoorStatus()!=GarageDoor::OPENED)) {
+                doorController->setDoorStatus(GarageDoor::OPENING);
+                saveStatus();
                 doorController->open();
-                reportStatus();
             }
             sendResponse();
             saveStatus();
@@ -103,8 +94,9 @@ void GarageDoorSystem::run() {
             break;
         case CLOSE:
             if (doorController->isCalibrated()&doorController->getDoorStatus()!=GarageDoor::CLOSED) {
+                doorController->setDoorStatus(GarageDoor::CLOSING);
+                saveStatus();
                 doorController->close();
-                reportStatus();
             }
             sendResponse();
             saveStatus();

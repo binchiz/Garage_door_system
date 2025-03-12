@@ -1,10 +1,4 @@
-#include <cstdio>
-#include <cstring>
-#include <cmath>
 #include "pico/stdlib.h"
-#include "pico/time.h"
-#include "hardware/timer.h"
-
 #include "./handler/lib/Mqtt_tool.h"
 #include "hardware/Button.h"
 #include "hardware/RotaryEncoder.h"
@@ -19,8 +13,7 @@
 #include "controller/DoorController.h"
 #include "GarageDoorSytem.h"
 
-#include <iostream>
-
+using namespace MQTTTMessage;
 
 int main() {
     stdio_init_all();
@@ -46,9 +39,9 @@ int main() {
     MQTTHandler_t mqtt_handler{
         controller,
         doorSystem,
-        "zzy_phone",     // WiFi SSID
-        "zzy88888", // WiFi 密码
-        "172.20.10.3",    // MQTT 服务器地址
+        "B38-2G",     // WiFi SSID
+        "kisupupu8697", // WiFi 密码
+        "192.168.1.107",    // MQTT 服务器地址
         2883,               // MQTT 服务器端口
         "GarageDoor-Client" // 客户端ID
     };
@@ -57,8 +50,10 @@ int main() {
     controller.setMQTTHandler(&mqtt_handler);
     doorSystem.initialize(controller, buttonHandler, mqtt_handler, storage);
 
+    doorSystem.loadStoredStatus();
+    mqtt_handler.publish_MQTT(MQTT::QOS1, RESPONSE_TOPIC, const_cast<void*>(static_cast<const void*>(REBOOT_MSG)), strlen(REBOOT_MSG));
+    doorSystem.reportStatus();
 
-    std::cout << "initialization complete" << std::endl;
     while (true) {
         doorSystem.run();
     }

@@ -15,17 +15,17 @@ void Storage_t::saveCalib() const {
     }
 }
 
-void Storage_t::savePos() const {
-    auto data = static_cast<uint8_t>(controller.getPosition());
-    auto dataL = static_cast<uint8_t>(data & 0xFF);
-    auto dataH = static_cast<uint8_t>(data >> 8);
-    if (!eeprom.writeByteWithChecksum(ADDR_POS_L, ADDR_POS_L_CSUM, dataL)) {
-        // failed save data, set error and blink led as well?
-    }
-    if (!eeprom.writeByteWithChecksum(ADDR_POS_H, ADDR_POS_H_CSUM, dataH)) {
-        // failed save data, set error and blink led as well?
-    }
-}
+// void Storage_t::savePos() const {
+//     auto data = static_cast<uint8_t>(controller.getPosition());
+//     auto dataL = static_cast<uint8_t>(data & 0xFF);
+//     auto dataH = static_cast<uint8_t>(data >> 8);
+//     if (!eeprom.writeByteWithChecksum(ADDR_POS_L, ADDR_POS_L_CSUM, dataL)) {
+//         // failed save data, set error and blink led as well?
+//     }
+//     if (!eeprom.writeByteWithChecksum(ADDR_POS_H, ADDR_POS_H_CSUM, dataH)) {
+//         // failed save data, set error and blink led as well?
+//     }
+// }
 
 void Storage_t::saveTotalSteps() const {
     auto data = static_cast<uint8_t>(controller.getTotalSteps());
@@ -63,16 +63,16 @@ void Storage_t::loadCalib() {
     controller.setCalib(static_cast<calibState_t>(data));
 }
 
-void Storage_t::loadPos() {
-    uint8_t dataL, dataH;
-    if (!eeprom.readByteWithChecksum(ADDR_POS_L, ADDR_POS_L_CSUM, &dataL)) {
-        // failed to read data, set error and blink led as well?
-    }
-    if (!eeprom.readByteWithChecksum(ADDR_POS_H, ADDR_POS_H_CSUM, &dataH)) {
-        // failed to read data, set error and blink led as well?
-    }
-    controller.setPosition(static_cast<int>(dataL) | (static_cast<int>(dataH) << 8));
-}
+// void Storage_t::loadPos() {
+//     uint8_t dataL, dataH;
+//     if (!eeprom.readByteWithChecksum(ADDR_POS_L, ADDR_POS_L_CSUM, &dataL)) {
+//         // failed to read data, set error and blink led as well?
+//     }
+//     if (!eeprom.readByteWithChecksum(ADDR_POS_H, ADDR_POS_H_CSUM, &dataH)) {
+//         // failed to read data, set error and blink led as well?
+//     }
+//     controller.setPosition(static_cast<int>(dataL) | (static_cast<int>(dataH) << 8));
+// }
 
 void Storage_t::loadTotalSteps() {
     uint8_t dataL, dataH;

@@ -23,7 +23,6 @@ DoorController_t::DoorController_t(
         .calibState = UNCALIBRATED,
         .moving =false,
         .totalSteps = 0,
-        .currentPosition = 0,
     };
 }
 
@@ -51,9 +50,6 @@ int DoorController_t::getTotalSteps() const {
     return status.totalSteps;
 }
 
-int DoorController_t::getPosition() const {
-    return status.currentPosition;
-}
 
 void DoorController_t::setMoving(const bool isMoving) {
     status.moving = isMoving;
@@ -64,9 +60,6 @@ void DoorController_t::setCalib(const calibState data) {
     status.calibState = data;
 }
 
-void DoorController_t::setPosition(const int data) {
-    status.currentPosition = data;
-}
 
 void DoorController_t::setError(const errorState data) {
     status.errorState = data;
@@ -126,32 +119,28 @@ void DoorController_t::calibrate() {
     leds.calibrationLed();
     status.moving = true;
     moveStartTime = time_us_32() / 1000;
+    if (!gpio_get(17)) {
+        for (int i = 0; i < calibMargin; i++) motor.moveUp();
+    }
     while (!lowerLimit.isPressed()) {
         motor.moveDown();
         if (checkIfStuck()) {
-            std::cout << "Calibration failed: Door stuck while moving down" << std::endl;
             return;
         }
     }
-    std::cout<<"finished moving down, now start counting steps" << std::endl;
     int steps = 0;
     while (!upperLimit.isPressed()) {
         motor.moveUp();
         steps++;
         if (checkIfStuck()) {
-            std::cout << "Calibration failed: Door stuck while moving up" << std::endl;
             return;
         }
     }
     status.totalSteps = steps;
-    status.currentPosition = 0; // Current position is calibMargin steps down from top
     status.calibState = CALIBRATED;
     status.errorState = NORMAL;
     status.doorState = GarageDoor::OPENED;
     status.moving = false;
-
-    std::cout << "Calibration complete. Total steps: " << status.totalSteps << std::endl;
-    std::cout << "Current position: " << status.currentPosition << std::endl;
 }
 
 void DoorController_t::open() {
@@ -160,7 +149,6 @@ void DoorController_t::open() {
     status.doorState = GarageDoor::OPENING;
     moveStartTime = time_us_32() / 1000;
     while (!upperLimit.isPressed()) {
-         status.currentPosition--;
         if (checkIfStuck()) return;
         motor.moveUp();
         buttonHandler->update();
@@ -177,7 +165,6 @@ void DoorController_t::close() {
     status.doorState = GarageDoor::CLOSING;
     moveStartTime = time_us_32() / 1000;
     while (!lowerLimit.isPressed()) {
-        status.currentPosition++;
         if (checkIfStuck()) return;
         motor.moveDown();
         buttonHandler->update();

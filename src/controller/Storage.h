@@ -17,13 +17,13 @@ class Storage_t {
         explicit Storage_t(const EEPROM_t &eeprom, DoorController_t& controller);
         ~Storage_t() = default;
         void saveCalib() const;
-        void savePos() const;
+        //void savePos() const;
         void saveTotalSteps() const;
         void saveState() const;
         void saveError() const;
 
         void loadCalib();
-        void loadPos();
+        //void loadPos();
         void loadTotalSteps();
         void loadState();
         void loadError();

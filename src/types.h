@@ -30,7 +30,6 @@ struct Status_t {
     calibState_t calibState;
     bool moving;
     int totalSteps;
-    int currentPosition; //当前位置看步数
 };
 
 inline const char* getErrorStateString(errorState_t state) {
@@ -53,6 +52,7 @@ namespace MQTTTMessage {
     constexpr const char* STATUS_TOPIC = "garage/door/status";
     constexpr const char* COMMAND_TOPIC = "garage/door/command";
     constexpr const char* RESPONSE_TOPIC = "garage/door/response";
+    constexpr const char* REBOOT_MSG = "SYSTEM REBOOT";
     constexpr const char* SUCCESS_MSG = "SUCCESS";
     constexpr const char* STUCK_MSG = "DOOR STUCK";
     constexpr const char* NO_CALIB_MSG = "NOT CALIBRATED";
