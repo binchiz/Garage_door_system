@@ -39,11 +39,11 @@ int main() {
     MQTTHandler_t mqtt_handler{
         controller,
         doorSystem,
-        "B38-2G",     // WiFi SSID
-        "kisupupu8697", // WiFi 密码
-        "192.168.1.107",    // MQTT 服务器地址
-        2883,               // MQTT 服务器端口
-        "GarageDoor-Client" // 客户端ID
+        "",
+        "",
+        "192.168.1.107",
+        2883,
+        "GarageDoor-Client" 
     };
 
     controller.setButtonHandler(&buttonHandler);

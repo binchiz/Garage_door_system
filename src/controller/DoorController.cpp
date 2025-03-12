@@ -7,9 +7,6 @@
 #include "handler/MQTTHandler.h"
 #include "types.h"
 
-#include <iostream>
-
-
 
 DoorController_t::DoorController_t(
     LimitSwitch_t &upperLimit,
